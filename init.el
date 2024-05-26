@@ -1227,7 +1227,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   ;; make org-mode table editor available in text-mode (or derived modes)
   (add-hook 'text-mode-hook #'my-enable-orgtbl-mode)
   :config
-  ;; Key-bindings.
+  ;;; Key-bindings.
   (let ((m org-mode-map))
     ;; x as in "check as done".
     (define-key m (kbd "C-c o x") #'org-archive-subtree)
@@ -1237,17 +1237,18 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
     (define-key m (kbd "C-c C-d") #'org-deadline)
     ;; jump to heading with live preview
     (define-key m (kbd "C-c o h") #'consult-outline))
+  ;;;
+  ;;; Basic configuration and appearence.
+  ;;;
+  ;; Default location to look for org files.
+  (setq org-directory "~/org")
+  ;; When entering org files start in folded `OVERVIEW' state?
+  ;; Can also be configured per file with `#+STARTUP`.
+  (setq org-startup-folded nil)
   ;; Always run in org-indent-mode (level by indent rather than asterisks).
   (setq org-startup-indented t)
-  ;; agenda should start with Monday
-  (setq org-agenda-start-on-weekday 1)
-  ;; calendar should start with Monday
-  (setq calendar-week-start-day 1)
   ;; character(s) to indicate a folded section
   (setq org-ellipsis "...")
-  ;; when entering org files: start in folded `OVERVIEW` state?
-  ;; can also be configured per file with `#+STARTUP`.
-  (setq org-startup-folded nil)
   ;; Extend the org-mode markup to be fontified like markdown:
   ;; - surround with "`": verbatim/code face
   ;; - surround with "**": bold
@@ -1263,24 +1264,35 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 			  'append)
   (setq org-emphasis-alist '(("_" underline)
                              ("~" (:strike-through t))))
-  ;; default location to look for org files.
-  (setq org-directory "~/org")
-  ;; files to include when compiling the agenda.
-  (setq org-agenda-files '("~/org/work.org" "~/org/archive.org"))
-  ;; location to store archived entries/subtrees. Items are placed under
-  ;; H1-headlines "From FILE" where `FILE` is the file from where entry was
-  ;; archived.
-  (setq org-archive-location "~/org/archive.org::* %s archive")
-  ;; add archived items first under heading
-  (setq org-archive-reversed-order t)
-  ;; possible workflow states (use S-{left,right} to move throught states)
-  (setq org-todo-keywords '((sequence "TODO" "STARTED" "BLOCKED"
-                                      "|" "DONE")))
-  ;; capture timestamp when a TODO changes state to DONE.
+  ;;;
+  ;;; Task/todo management.
+  ;;;
+  ;; Possible todo workflow states (use S-{left,right} to move throught states).
+  (setq org-todo-keywords '((sequence "TODO" "STARTED" "BLOCKED" "|" "DONE" "SKIPPED")))
+  ;; Save timestamp when a todo changes state to DONE.
   (setq org-log-done 'time)
-  ;; where to place captured notes.
+  ;; Location where archived entries/subtrees are to be stored. Items are placed
+  ;; under H1-headlines "Archived from `<file>'" where `<file>' is the file from
+  ;; which the entry was archived.
+  (setq org-archive-location "~/org/archive.org::* Archived from %s")
+  ;; Add archived items as first entry under destination heading.
+  (setq org-archive-reversed-order t)
+
+  ;;;
+  ;;; Agenda.
+  ;;;
+  ;; Files to include when compiling the agenda.
+  (setq org-agenda-files '("~/org/work.org" "~/org/archive.org"))
+  ;; Start week with Monday.
+  (setq org-agenda-start-on-weekday 1)
+  (setq calendar-week-start-day 1)
+
+  ;;;
+  ;;; Capture.
+  ;;;
+  ;; Default file to place captured notes unless specified in capture template.
   (setq org-default-notes-file (concat org-directory "/captured.org"))
-  ;; templates to select from on org-capture
+  ;; Templates to select from on org-capture
   ;; - "%i": initial content (marked region  when capture was called).
   ;; - "%a": annotation, normally the link created with org-store-link.
   ;; - "%l": like %a, but only insert literal link.
@@ -1290,6 +1302,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   (setq org-capture-templates
         '(("w" "work" entry (file+headline "~/org/work.org" "Inbox")
            "* TODO %?")))
+
   (defun my-org-open ()
     "Interactively open a file in `org-directory`."
     (interactive)
