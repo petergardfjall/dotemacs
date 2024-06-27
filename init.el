@@ -923,6 +923,11 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :config
    ;; no tabs for indentation
   (setq indent-tabs-mode nil)
+  ;; PEP-8 calls for a limit of 79 characters per line.
+  (setq-local fill-column 79)
+  ;; Always use four space for each indentation level.
+  (setq-local python-indent-offset 4)
+  (setq-local python-indent-guess-indent-offset 'nil)
   ;; add buffer-local save hook only for buffers in this mode
   (add-hook 'python-mode-hook 'my-untabify-on-save-hook)
   (add-hook 'python-mode-hook 'my-strip-on-save-hook))
