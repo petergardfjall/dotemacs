@@ -636,7 +636,8 @@ performance impact should be unnoticable though."
   :commands (projtree-mode)
   :bind (("<f8>" . projtree-mode))
   :config
-  (setq projtree-profiling-enabled nil))
+  (setq projtree-profiling-enabled nil)
+  (setq projtree-show-git-status t))
 
 
 (use-package postrace
