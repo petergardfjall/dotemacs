@@ -15,21 +15,20 @@
 ;; Use straight.el over package.el for package management.
 ;;
 
-;; we disable package.el in favor of straight.el
+;; Disable package.el in favor of straight.el.
 (setq package-enable-at-startup nil)
 
 ;; Customize when straight rebuilds packages: (1) on `M-x straight-check-all` or
 ;; (2) when a file under straight/repos/ is saved.
 ;; By default straight uses a bulk `find(1)` command on emacs startup (the
 ;; `'find-at-startup` option), which adds about a second to the startup time.
-(setq straight-check-for-modifications '(find-when-checking check-on-save))
+(defvar straight-check-for-modifications '(find-when-checking check-on-save))
 
 
 ;;
-;; inhibit/customize certain UI features before we have initialized the
-;; windowing environment.
+;; Inhibit certain UI features before we have initialized the windowing
+;; environment.
 ;;
-
 (setq inhibit-splash-screen t)
 (setq inhibit-startup-screen t)
 ;; Hide vertical scrollbar on right

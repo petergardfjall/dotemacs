@@ -7,6 +7,8 @@
 
 ;;; Code:
 
+(require 'early-init)
+
 (message "Loaded early-init.el after %.3fs." my-early-init-duration)
 
 ;; Time for starting to load this file.
