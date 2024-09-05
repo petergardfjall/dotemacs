@@ -1069,6 +1069,17 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
          "https://petergardfjall.github.io/js/emacs-markdown/github-markdown-block-highlight.js")))
 
 
+;; Major mode for AsciiDoc (.adoc) file editing.
+(use-package adoc-mode
+  :straight (adoc-mode :type git :host github :repo "bbatsov/adoc-mode"
+                       :branch "master")
+  :commands (adoc-mode)
+  :mode (("\\.adoc$" . adoc-mode))
+  :config
+  (add-hook 'adoc-mode-hook #'my-highlight-todos)
+  ;; Don't want orgtable "help" with formatting tables.
+  (add-hook 'adoc-mode-hook (lambda () (orgtbl-mode -1))))
+
 ;; Varnish .vcl file editing.
 (use-package vcl-mode
   :straight t
