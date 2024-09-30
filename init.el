@@ -27,6 +27,18 @@
 For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (defvar my-font-size 10.5 "Font size to use in points (for example, 10.5).")
 
+
+(defun my-scale-font (resolution)
+  "Scale the frame font according to screen RESOLUTION.
+For a RESOLUTION of `high-dpi' the default font is scaled to twice its
+size.  For any other RESOLUTION (`low-dpi') the default font is set to
+its original size."
+  (interactive
+   (list (completing-read "Select target resolution: " '(high-dpi low-dpi))))
+  (let* ((new-size (if (string= resolution 'high-dpi) (* 2 my-font-size) my-font-size)))
+    (set-frame-font (format "%s-%f" my-font new-size))))
+
+
 ;;
 ;; Tricks to reduce startup time. These need to be set at an early stage.
 ;;
