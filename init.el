@@ -9,6 +9,7 @@
 ;;; Code:
 
 (require 'early-init)
+(require 'use-package)
 
 (message "Loaded early-init.el after %.3fs." my-early-init-duration)
 
