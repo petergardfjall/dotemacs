@@ -1361,6 +1361,21 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :config)
 
 
+(use-package shell
+  :straight (:type built-in)
+  :commands shell
+  :config)
+
+(use-package ansi-term
+  :straight (:type built-in)
+  :commands (ansi-term)
+  :config)
+
+(use-package term
+  :straight (:type built-in)
+  :commands (term)
+  :config)
+
 (use-package vterm
   :straight t
   ;; Lazily load when called for.
