@@ -1,4 +1,5 @@
-;;; emacs-init.el --- Main entry-point for emacs configuration.
+;;; emacs-init.el --- Main entry-point for emacs configuration. -*- lexical-binding: t -*-
+;;;
 ;;; Commentary:
 ;;;
 ;;; Makes heavy use of the use-package macro.  For bootstrapping, and installing
