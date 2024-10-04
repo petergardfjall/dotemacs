@@ -20,24 +20,14 @@
 ;; Declarations
 ;;
 
-(defvar my-frame-width 85
+(defvar my-frame-width 120
   "Initial width of Emacs frame.")
+(defvar my-frame-height 40
+  "Initial height of Emacs frame.")
 (defvar my-font "Roboto Mono"
   "Text font to use.
 For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (defvar my-font-size 10.5 "Font size to use in points (for example, 10.5).")
-
-
-(defun my-scale-font (resolution)
-  "Scale the frame font according to screen RESOLUTION.
-For a RESOLUTION of `high-dpi' the default font is scaled to twice its
-size.  For any other RESOLUTION (`low-dpi') the default font is set to
-its original size."
-  (interactive
-   (list (completing-read "Select target resolution: " '(high-dpi low-dpi))))
-  (let* ((new-size (if (string= resolution 'high-dpi) (* 2 my-font-size) my-font-size)))
-    (set-frame-font (format "%s-%f" my-font new-size))))
-
 
 ;;
 ;; Tricks to reduce startup time. These need to be set at an early stage.
@@ -93,6 +83,26 @@ its original size."
 	(eval-print-last-sexp)))
     (message "loading straight.el bootstrapper ...")
     (load bootstrap-file nil 'nomessage)))
+
+(defun my-scale-font (resolution)
+  "Scale the frame font according to screen RESOLUTION.
+For a RESOLUTION of `high-dpi' the default font is scaled to twice its
+size.  For any other RESOLUTION (`low-dpi') the default font is set to
+its original size."
+  (interactive
+   (list (completing-read "Select target resolution: " '(high-dpi low-dpi))))
+  (let* ((new-size (if (string= resolution 'high-dpi) (* 2 my-font-size) my-font-size)))
+    (set-frame-font (format "%s-%f" my-font new-size))))
+
+(defun my-resolution-resize ()
+  "Resize frame to its default size and scale the font after screen resolution."
+  (interactive)
+  (defun 4k-resolution-p ()
+    (and (display-graphic-p) (>= (display-pixel-width) 3840)))
+  (my-reset-size)
+  (if (4k-resolution-p)
+      (my-scale-font 'high-dpi)
+    (my-scale-font 'low-dpi)))
 
 (defun my-normalized-path (path)
   "Return a normalized PATH that is expanded and trimmed of trailing slash."
@@ -219,6 +229,12 @@ commands available."
   (interactive)
   (message "byte offset: %d" (1- (position-bytes (point)))))
 
+(defun my-reset-size ()
+  "Reset the size of the selected frame to its default size."
+  (interactive)
+  (set-frame-height (selected-frame) my-frame-height)
+  (set-frame-width (selected-frame) my-frame-width))
+
 ;;
 ;; Start of actual initialization.
 ;;
@@ -259,9 +275,13 @@ commands available."
   (setq-default fill-column 80)
   ;; Entering a character replaces the selected (active) region.
   (delete-selection-mode 1)
-  ;; Set the default font to use on all frames (see
-  ;; https://www.freedesktop.org/software/fontconfig/fontconfig-user.html)
-  (add-to-list 'default-frame-alist `(font . ,(format "%s-%f" my-font my-font-size)))
+  ;; Set the default font.
+  ;; See https://www.freedesktop.org/software/fontconfig/fontconfig-user.html
+  (set-frame-font (format "%s-%f" my-font my-font-size))
+  (when (and (display-graphic-p) (> (display-pixel-width) 3000))
+    (message "scaling font")
+    (my-scale-font 'high-dpi))
+
   ;; Allow copy/paste to/from system clipboard.
   (setq select-enable-clipboard t)
   ;; Middle mouse button inserts the clipboard (rather than emacs primary).
@@ -290,9 +310,10 @@ commands available."
   (set-default 'cursor-type 'box)
   ;; blinking cursor?
   (blink-cursor-mode 0)
-  ;; set initial frame width (in characters)
+  ;; Set initial frame width (in characters).
   (if (display-graphic-p)
-      (setq initial-frame-alist `((width . ,my-frame-width))))
+      (setq initial-frame-alist `((width . ,my-frame-width)
+                                  (height . ,my-frame-height))))
   ;; automatically revert current buffer when visited file changes on disk
   (global-auto-revert-mode)
   ;; Prevent emacs from writing customized settings to .emacs
