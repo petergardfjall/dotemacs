@@ -16,8 +16,7 @@ func Test$0(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		tc := test // don't close over loop variable
+	for _, tc := range tests {
 		t.Run(tc.name, func(t *testing.T) {
 			// got, err := doSomething(..)
 			//
