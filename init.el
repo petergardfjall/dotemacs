@@ -858,7 +858,6 @@ for symbol at point if there is one)."
   (add-to-list 'major-mode-remap-alist '(js-mode     . js-ts-mode))
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(rust-mode   . rust-ts-mode))
   (add-to-list 'major-mode-remap-alist '(sql-mode    . sql-ts-mode))
   (add-to-list 'major-mode-remap-alist '(toml-mode   . toml-ts-mode))
   ;; Specify which tree-sitter language grammar defintions to use.
@@ -900,6 +899,7 @@ for symbol at point if there is one)."
 	 (python-mode . eglot-ensure)
          (python-ts-mode . eglot-ensure)
          (rust-mode . eglot-ensure)
+         (rust-ts-mode . eglot-ensure)
          (typescript-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure))
   :commands (eglot eglot-ensure)
@@ -918,8 +918,8 @@ for symbol at point if there is one)."
   (add-to-list 'eglot-server-programs '((cmake-mode) . ("cmake-language-server")))
   (add-to-list 'eglot-server-programs '((js-mode js-ts-mode tsx-ts-mode typescript-ts-mode typescript-mode)
                                         . ("typescript-language-server" "--stdio")))
-  ;; See https://rust-analyzer.github.io/manual.html#rustup.
-  (add-to-list 'eglot-server-programs '((rust-mode) . ("rustup" "run" "stable" "rust-analyzer")))
+  ;; See https://rust-analyzer.github.io/manual.html#emacs
+  (add-to-list 'eglot-server-programs '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
 
   ;; Additional gopls settings.
   ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
