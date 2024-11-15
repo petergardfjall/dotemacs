@@ -1173,6 +1173,8 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight t
   :mode (("\\.rs$" . rust-mode))
   :config
+  ;; Set up on-save hooks to have eglot format and organize imports.
+  (add-hook 'rust-mode-hook 'my-add-eglot-format-on-save-hook)
   (setq indent-tabs-mode nil)
   ;; automatic formatting
   (setq rust-format-on-save t))
