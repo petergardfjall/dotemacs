@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: port
+# key: port
+# contributor : @petergardfjall
+# --
+// mustFindFreePort asks the kernel for a free TCP network port that is ready to use.
+// It panics on failure to do so.
+func mustFindFreePort() int {
+	listener, err := net.Listen("tcp", ":0")
+	if err != nil {
+		panic(err)
+	}
+	defer listener.Close()
+	return listener.Addr().(*net.TCPAddr).Port
+}
