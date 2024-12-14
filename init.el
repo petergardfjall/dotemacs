@@ -1396,18 +1396,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :commands (term)
   :config)
 
-(use-package vterm
-  :straight t
-  ;; Lazily load when called for.
-  :bind (("C-c v t" . vterm-other-window))
-  :config
-  (setq vterm-kill-buffer-on-exit t)
-  (let ((m vterm-mode-map))
-    ;; Toggle from term input to emacs buffer (search/copy) mode.
-    (define-key m (kbd "C-c C-t") #'vterm-copy-mode)
-    (define-key m (kbd "C-c C-l") #'vterm-clear-scrollback)))
-
-
 ;; a package for making screencasts within Emacs.
 (use-package gif-screencast
   :straight t
