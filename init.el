@@ -1249,18 +1249,15 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :hook ((graphql-mode . prettier-mode)))
 
 
-;; which-key is a minor mode for Emacs that displays the key bindings following
-;; your currently entered incomplete command (a prefix) in a popup.
+;; `which-key' is a minor mode for Emacs that displays available key bindings
+;; following your currently entered incomplete command.
 (use-package which-key
-  :straight t
-  :defer 5
+  :straight (:type built-in)
   :diminish
   :config
-  ;; show popup at the bottom of the window
+  ;; Show popup at bottom of frame.
   (which-key-setup-side-window-bottom)
-  ;; separator between key and bound command. Defaults to ' → '.
-  (setq which-key-separator " ")
-  ;; delay after which which-key popup appears after starting to type a command
+  ;; Delay popup appearance after starting to type a command.
   (setq which-key-idle-delay 1.0)
   (which-key-mode))
 
