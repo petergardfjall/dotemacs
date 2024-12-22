@@ -439,37 +439,15 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
     (define-key m (kbd "<up>") #'isearch-repeat-forward)))
 
 
-(defun my-buffer-search ()
-  "Search the current buffer for occurences of a string.
-It works by executing `consult-line-multi' only on the current
-buffer (controlled through a buffer predicate).  `consult-line'
-offers similar functionality (`completing-read' search with live
-preview) but only highlights a single occurence of the search
-term in the buffer preview.  `consult-line-multi' shows all
-occurences (like for example the regular `isearch-forward') but
-executes `grep' behind the scenes.  For a single buffer the
-performance impact should be unnoticable though."
-  (interactive)
-  ;; For this call only, make the `grep' search more responsive.
-  (let ((consult-async-input-debounce 0.0)
-	(consult-async-min-input 1)
-	(consult-async-refresh-delay 0.0)
-	(consult-async-input-throttle 0.0))
-    (consult-line-multi '(:predicate (lambda (buf) (eq buf (current-buffer)))))))
-
-
 ;; Consult provides practical commands based on completing-read.
 (use-package consult
   :straight t
   :bind (("M-g g"   . consult-goto-line) ;; goto-line
-	 ;; search buffer with live preview.
+	 ;; Search buffer with live preview.
 	 ("C-s"     . consult-line)
-	 ;; "search buffer". runs grep in current buffer. Shows all findings in
-	 ;; live preview, will start at first occurence.
-	 ("C-c s b" . my-buffer-search)
-	 ;; "search git": free-text search in version-controlled files
+	 ;; "Search git": free-text search in version-controlled files.
 	 ("C-c s g" . consult-git-grep)
-	 ;; "search project": free-text search in all project files
+	 ;; "Search project": free-text search in all project files.
 	 ("C-c s p" . consult-ripgrep))
   :init
   ;; Use Consult to select xref locations with preview.
