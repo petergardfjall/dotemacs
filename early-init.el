@@ -40,6 +40,23 @@
       (concat invocation-name "@" (system-name) ":" default-directory))
 
 
+;; Avoid garbage collection performance-penalty on startup by temporarily
+;; bumping the memory threshold to `most-positive-fixnum'. A more sensible value
+;; is set further downin the `emacs-startup-hook' a few lines below.
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.5)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            ;; Bumping the GC threshold is beneficial for language servers.
+            (setq gc-cons-threshold (* 8 1024 1024) ;; 8 MiB (default: 800kB)
+                  gc-cons-percentage 0.1))) ;; Re-set default.
+
+;; Bumping the subprocess read chunk size is beneficial for language servers.
+(setq read-process-output-max (* 4 1024 1024)) ;; 4 MiB (default: 64kB)
+(setq process-adaptive-read-buffering nil)
+
+
 (defconst my-early-init-duration
    (float-time (time-subtract (current-time) my-early-init-start-time))
    "The elapsed time since start of early-init.el loading.")

@@ -30,40 +30,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (defvar my-font-size 10.5 "Font size to use in points (for example, 10.5).")
 
 ;;
-;; Tricks to reduce startup time. These need to be set at an early stage.
-;;
-
-;;
-;; avoid GC performance-penalty on startup by temporarily bumping the memory
-;; threshold for GC. This effectively defers garbage collection.
-;;
-(defvar gc-cons-threshold-custom (* (expt 2 7) gc-cons-threshold)
-  "Garbage collection memory threshold to use after init.")
-;; set high (256 mb) temporarily during init
-(setq gc-cons-threshold 268435456)
-
-;; Adjust default setting default (4K) to allow emacs to read larger output
-;; chunks from processes. Language server responses can be in the order of a MB.
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
-
-;; don't run (package-initialize)
-(setq package-enable-at-startup nil)
-;; at startup we don't want emacs to look for a handler for every opened file.
-(defvar file-name-handler-alist-default file-name-handler-alist)
-(setq file-name-handler-alist nil)
-
-;; re-set temporarily disabled features once init is complete.
-(add-hook 'after-init-hook
-          (lambda ()
-            ;; set sensible GC threshold.
-            (setq gc-cons-threshold gc-cons-threshold-custom)
-            ;; re-enable file handler associations.
-            (setq file-name-handler-alist file-name-handler-alist-default)))
-
-;; suppress warnings from asynchronous native compilation
-(setq native-comp-async-report-warnings-errors nil)
-
-;;
 ;; Bootstrap package management.
 ;;
 (defun my-bootstrap-straight-el ()
