@@ -64,9 +64,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (setq native-comp-async-report-warnings-errors nil)
 
 ;;
-;; Utility functions
+;; Bootstrap package management.
 ;;
-
 (defun my-bootstrap-straight-el ()
   "Ensures straight.el is installed and loaded."
   (message "bootstrapping straight.el ...")
@@ -84,156 +83,51 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
     (message "loading straight.el bootstrapper ...")
     (load bootstrap-file nil 'nomessage)))
 
-(defun my-scale-font (resolution)
-  "Scale the frame font according to screen RESOLUTION.
-For a RESOLUTION of `high-dpi' the default font is scaled to twice its
-size.  For any other RESOLUTION (`low-dpi') the default font is set to
-its original size."
-  (interactive
-   (list (completing-read "Select target resolution: " '(high-dpi low-dpi))))
-  (let* ((new-size (if (string= resolution 'high-dpi) (* 2 my-font-size) my-font-size)))
-    (set-frame-font (format "%s-%f" my-font new-size))))
+;;
+;; Lazily loaded utility functions.
+;;
+(add-to-list 'load-path "~/.emacs.d/emacs-modules")
 
-(defun my-resolution-resize ()
-  "Resize frame to its default size and scale the font after screen resolution."
-  (interactive)
-  (defun 4k-resolution-p ()
-    (and (display-graphic-p) (>= (display-pixel-width) 3840)))
-  (my-reset-size)
-  (if (4k-resolution-p)
-      (my-scale-font 'high-dpi)
-    (my-scale-font 'low-dpi)))
+(autoload 'my-byte-offset "my-buffer-functions.el"
+  "Report the byte offset (0-indexed) at point (cursor position)." t)
+(autoload 'my-rename-file-and-buffer "my-buffer-functions.el"
+  "Rename the current buffer and the file it is visiting." t)
+(autoload 'my-strip-on-save-hook "my-buffer-functions.el"
+  "Register a buffer-local `before-save-hook' to run `delete-trailing-whitespace'." nil)
+(autoload 'my-untabify-buffer "my-buffer-functions.el"
+  "Run `untabify' on the whole buffer." t)
+(autoload 'my-untabify-on-save-hook "my-buffer-functions.el"
+  "Register a buffer-local `before-save-hook' to `untabify' entire buffer." nil)
 
-(defun my-normalized-path (path)
-  "Return a normalized PATH that is expanded and trimmed of trailing slash."
-  (string-trim-right (expand-file-name path) "/"))
+(autoload 'my-ggtags-create "my-ggtags-functions.el"
+  "Create `GTAGS' in the root directory of the current buffer's project." t)
+(autoload 'my-ggtags-find-definition "my-ggtags-functions.el"
+  "Replacement for `ggtags-find-definition' that will always prompt." t)
+(autoload 'my-ggtags-find-reference "my-ggtags-functions.el"
+  "Replacement for `ggtags-find-reference' that will always prompt." t)
 
-(defun my-first-existing-ancestor-dir (path)
-  "Return the first ancestor directory of PATH that exists on the file system."
-  (if (and (file-directory-p path) (file-exists-p path))
-      (abbreviate-file-name path)
-    (my-first-existing-ancestor-dir (file-name-directory (my-normalized-path path)))))
-
-(defun my-find-project-root (path)
-  "Return the project root directory for PATH.
-If PATH is not in a version-controlled directory, nil is returned."
-  (when-let* ((closest-dir (my-first-existing-ancestor-dir path))
-              (proj (project-current nil closest-dir)))
-    (project-root proj)))
-
-(defun my-project-root ()
-  "Return the project root directory of the current buffer.
-If the buffer is visiting a file not in a project directory, the
-buffer's directory is returned."
-  (if (project-current)
-      (project-root (project-current))
-    default-directory))
-
-(defun my-elapsed-time ()
-  "Get the elapsed time since start of loading."
-  (float-time (time-subtract (current-time) emacs-start-time)))
-
-(defun my-untabify-buffer ()
-  "Run 'untabify' on the whole buffer."
-  (interactive)
-  (untabify (point-min) (point-max)))
-
-
-(defun my-untabify-on-save-hook ()
-  "Register a buffer-local 'before-save-hook' to run 'generic-fmt-buffer'."
-  ;; note: last argument makes this save-hook local to the buffer
-  (add-hook 'before-save-hook #'my-untabify-buffer nil t))
-
-
-(defun my-strip-on-save-hook ()
-  "Register a buffer-local 'before-save-hook' to run 'delete-trailing-whitespace'."
-  ;; note: last argument makes this save-hook local to the buffer
-  (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
+(autoload 'my-color-lighten "my-display-functions.el"
+  "Determine a brighter/darker shade of a hex color." t)
+(autoload 'my-resolution-resize "my-display-functions.el"
+  "Resize frame to its default size and scale the font after screen resolution." t)
+(autoload 'my-scale-font "my-display-functions.el"
+  "Scale the frame font according to screen RESOLUTION." t)
+(autoload 'my-set-default-font-height "my-display-functions.el"
+  "Reset the font height for the selected frame to the default font size." t)
 
 
 (defun my-add-eglot-format-on-save-hook ()
-  "Register a buffer-local `before-save-hook' to run `eglot-format-buffer' and `eglot-code-action-organize-imports'."
+  "Register a buffer-local `before-save-hook' to format and organize imports."
   ;; The depth of -10 places this before eglot's willSave notification,
   ;; so that that notification reports the actual contents that will be saved.
   ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md.
   (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
   (add-hook 'before-save-hook (lambda () (call-interactively #'eglot-code-action-organize-imports)) -9 t))
 
-
-(defun my-close-all-buffers ()
-  "Kill all open buffers."
-  (interactive)
-  (mapc 'kill-buffer (buffer-list)))
-
-
-(defun my-rename-file-and-buffer ()
-  "Rename the current buffer and file it is visiting."
-  (interactive)
-  (let ((filename (buffer-file-name)))
-    (if (not (and filename (file-exists-p filename)))
-        (message "Buffer '%s' is not visiting a file!" (buffer-name))
-      (let ((new-name (read-file-name "Rename file: " filename)))
-        (cond
-         ((vc-backend filename) (vc-rename-file filename new-name))
-         (t
-          (rename-file filename new-name t)
-          (set-visited-file-name new-name t t)))))))
-
-
-(defun my-set-default-font-height ()
-  "Reset the font height for the selected frame to the default font size."
-  (interactive)
-  ;; calculate delta between current face height and default font height and
-  ;; apply difference.
-  (let* ((font-height (face-attribute 'default :height))
-         (default-font-height (truncate (* 10 my-font-size)))
-         (delta-to-default (- default-font-height font-height)))
-    (default-text-scale-increment delta-to-default)))
-
-
-(defun my-color-lighten (hex-color percent)
-  "Determine a brighter/darker shade of a hex color.
-For a HEX-COLOR (such as `#3cb878`) return the hex color that is
-PERCENT percent brighter (or darker if percent value is
-negative)."
-  (interactive "sHex color: \nnPercent brighter/darker (-): ")
-  (if (fboundp 'immaterial-color-lighten)
-      (message "%s" (immaterial-color-lighten hex-color percent))))
-
-
-(defun my-enable-line-numbers-mode ()
-  "Enable `display-line-numbers-mode' in buffer."
-  (display-line-numbers-mode 1))
-
-(defun my-disable-line-numbers-mode ()
-  "Disable `display-line-numbers-mode' in buffer."
-  (display-line-numbers-mode -1))
-
-
-(defun my-enable-orgtbl-mode ()
-  "Enable `orgtbl-mode'.
-`orgtbl-mode' is a minor mode that makes Org-modes table editor
-commands available."
-  (require 'org)
-  (orgtbl-mode 1))
-
-
 (defun my-highlight-todos ()
   "Mark occurences of TODO with warning face."
   (font-lock-add-keywords nil
     '(("\\(TODO\\)" 1 'font-lock-warning-face prepend)) 'append))
-
-
-(defun my-byte-offset ()
-  "Report the byte offset (0-indexed) at point (cursor position)."
-  (interactive)
-  (message "byte offset: %d" (1- (position-bytes (point)))))
-
-(defun my-reset-size ()
-  "Reset the size of the selected frame to its default size."
-  (interactive)
-  (set-frame-height (selected-frame) my-frame-height)
-  (set-frame-width (selected-frame) my-frame-width))
 
 ;;
 ;; Start of actual initialization.
@@ -293,10 +187,8 @@ commands available."
   ;; scroll just enough text to bring point into view
   ;; (setq scroll-conservatively 101)
   ;; Enable line numbers in all text-mode/prog-mode buffers.
-  (add-hook 'text-mode-hook    #'my-enable-line-numbers-mode)
-  (add-hook 'prog-mode-hook    #'my-enable-line-numbers-mode)
-  ;; disable line numbers in special mode buffers (magit)
-  (add-hook 'special-mode-hook #'my-disable-line-numbers-mode)
+  (add-hook 'text-mode-hook    #'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook    #'display-line-numbers-mode)
   ;; Highlight todo markers in code.
   (add-hook 'prog-mode-hook #'my-highlight-todos)
   ;; highlight the current line
@@ -399,7 +291,7 @@ commands available."
 
 
 ;;
-;; Configure some basic settings for `completing-read' (minibuffer completion=
+;; Configure some basic settings for `completing-read' (minibuffer completion)
 ;; and, to some extent also `complete-at-point' (buffer completion).
 ;;
 ;; Also see:
@@ -479,7 +371,6 @@ commands available."
 ;; shows completion candidates in a popup overlay. Completions candidates are
 ;; provided by `completion-at-point-functions' such as
 ;; `eglot-completion-at-point'.
-;;
 (use-package company
   :straight t
   :diminish
@@ -585,8 +476,6 @@ performance impact should be unnoticable though."
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
   :config
-  ;; Needed to make consult project-aware (for example for `consult-grep').
-  (setq consult-project-root-function #'my-project-root)
   ;; Delay before starting a new async search (for example for `consult-grep').
   (setq consult-async-input-debounce 0.2))
 
@@ -603,8 +492,9 @@ performance impact should be unnoticable though."
   (defun my-project-buffer-annotator (cand)
     (let* ((buffer (get-buffer cand)))
       (when-let* ((buffer-file (buffer-file-name buffer))
-	          (project-dir (my-find-project-root buffer-file))
-	          (project-short (file-name-base (directory-file-name project-dir))))
+                  (buffer-proj (project-current nil buffer-file))
+	          (project-dir (project-root buffer-proj))
+	          (project-short (project-name buffer-proj)))
         (let ((project-rel-dir (file-name-directory (file-relative-name buffer-file project-dir))))
 	  (marginalia--fields
 	   (project-short :truncate 0.4 :face 'marginalia-value)
@@ -786,32 +676,6 @@ windmove: ← → ↑ ↓      resize: shift + {↤ ⭲ ⭱ ↧}"
 ;;; Development/coding
 ;;;
 
-(defun my-ggtags-find-definition  ()
-  "Prompting replacement for `ggtags-find-definition`.
-This function always prompts (default behavior is to just search
-for symbol at point if there is one)."
-  (interactive)
-  ;; can read 'definition, 'symbol, 'reference, 'id, 'path
-  (let ((tag (ggtags-read-tag 'definition t "Find definition [GTAGS]")))
-    (ggtags-find-definition tag)))
-
-(defun my-ggtags-find-reference  ()
-  "Prompting replacement for `ggtags-find-reference`.
-This function always prompts (default behavior is to just search
-for symbol at point if there is one)."
-  (interactive)
-  ;; can read 'definition, 'symbol, 'reference, 'id, 'path
-  (let ((ref (ggtags-read-tag 'reference t "Find reference [GTAGS]")))
-    (ggtags-find-reference ref)))
-
-(defun my-ggtags-create ()
-  "Create GTAGS in the root directory of the current buffer's project."
-  (interactive)
-  (if-let (proj-root (my-project-root))
-      (progn
-        (message "Generating tags in %s ..." proj-root)
-        (ggtags-create-tags proj-root))
-    (error "Did not find a project root dir in which to generate tags")))
 
 ;; Emacs frontend for GNU global/gtags to generate and search code tags.
 ;; Wraps the 'gtags' and 'global' command-line tools.
@@ -1141,7 +1005,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight t
   :mode (("\\.toml$" . toml-mode))
   :config
-  (add-hook 'toml-mode-hook #'my-enable-line-numbers-mode)
+  (add-hook 'toml-mode-hook #'display-line-numbers-mode)
   ;; add buffer-local save hook only for buffers in this mode
   (add-hook 'toml-mode-hook #'my-untabify-on-save-hook)
   (add-hook 'toml-mode-hook #'my-strip-on-save-hook))
@@ -1269,6 +1133,12 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :bind (("C-c u o" . browse-url-xdg-open))) ;; "URL open"
 
 
+;; Make `orgtbl-mode' available in text buffers: "C-c |" creates a table.
+(use-package org-table
+  :commands orgtbl-mode
+  :init
+  (add-hook 'text-mode-hook #'orgtbl-mode))
+
 ;; org-mode
 (use-package org
   :straight (:type built-in)
@@ -1279,9 +1149,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
          ("C-c o l" . org-store-link)
          ("C-c o c" . org-capture)
          ("C-c o a" . org-agenda))
-  :init
-  ;; make org-mode table editor available in text-mode (or derived modes)
-  (add-hook 'text-mode-hook #'my-enable-orgtbl-mode)
   :config
   ;;; Key-bindings.
   (let ((m org-mode-map))
@@ -1414,6 +1281,10 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 
 
 ;;; Finalization
+
+(defun my-elapsed-time ()
+  "Get elapsed time (float seconds) since Emacs was started."
+  (float-time (time-subtract (current-time) emacs-start-time)))
 
 ;; Output the time at which the loading of the init-file itself completed.
 (message "Loaded %s after %.3fs." load-file-name (my-elapsed-time))
