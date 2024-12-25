@@ -54,7 +54,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;
 (add-to-list 'load-path "~/.emacs.d/emacs-modules")
 
-(require 'my-global-keymaps)
+(require 'my-global-keymap)
 
 (autoload 'my-byte-offset "my-buffer-functions.el"
   "Report the byte offset (0-indexed) at point (cursor position)." t)
@@ -188,29 +188,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (setq show-paren-delay 0)
   (show-paren-mode 1)
   ;; Allow minibuffer commands while in the minibuffer.
-  (setq enable-recursive-minibuffers t)
-  ;;
-  ;; generic key bindings
-  ;;
-  ;; unbind unneeded/disturbing keybindings
-  (global-set-key (kbd "C-t") nil) ;; transpose characters
-  (global-set-key (kbd "M-t") nil) ;; transpose words
-  (global-set-key (kbd "M-h") nil) ;; mark-paragraph
-  ;; Comment line(s)
-  (global-set-key (kbd "C-c c") #'comment-line)
-  (global-set-key (kbd "C-c w") #'delete-trailing-whitespace)
-  ;; find definition of thing at point (if supported by mode)
-  (global-set-key (kbd "<M-down>") #'xref-find-definitions)
-  (global-set-key (kbd "<M-up>")   #'xref-pop-marker-stack)
-  (global-set-key (kbd "C-c f d")  #'xref-find-definitions)
-  (global-set-key (kbd "C-c f r")  #'xref-find-references)
-  ;; see if documentation can be found for thing at point
-  (global-set-key (kbd "C-c C-d")  #'eldoc)
-  ;; Move between windows with C-x w <up|down|left|right>
-  (global-set-key (kbd "C-x w <up>")    #'windmove-up)
-  (global-set-key (kbd "C-x w <down>")  #'windmove-down)
-  (global-set-key (kbd "C-x w <right>") #'windmove-right)
-  (global-set-key (kbd "C-x w <left>")  #'windmove-left))
+  (setq enable-recursive-minibuffers t))
 
 
 (my-general-settings)
