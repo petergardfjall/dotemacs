@@ -54,6 +54,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;
 (add-to-list 'load-path "~/.emacs.d/emacs-modules")
 
+(require 'my-global-keymaps)
+
 (autoload 'my-byte-offset "my-buffer-functions.el"
   "Report the byte offset (0-indexed) at point (cursor position)." t)
 (autoload 'my-rename-file-and-buffer "my-buffer-functions.el"
