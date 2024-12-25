@@ -84,13 +84,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   "Reset the font height for the selected frame to the default font size." t)
 
 
-(defun my-add-eglot-format-on-save-hook ()
-  "Register a buffer-local `before-save-hook' to format and organize imports."
-  ;; The depth of -10 places this before eglot's willSave notification,
-  ;; so that that notification reports the actual contents that will be saved.
-  ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md.
-  (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
-  (add-hook 'before-save-hook (lambda () (call-interactively #'eglot-code-action-organize-imports)) -9 t))
 
 (defun my-highlight-todos ()
   "Mark occurences of TODO with warning face."
@@ -696,6 +689,15 @@ windmove: ← → ↑ ↓      resize: shift + {↤ ⭲ ⭱ ↧}"
         (sleep-for 0.5)
         (treesit-install-language-grammar lang)
         (message "`%s' treesit language grammar installed." lang)))))
+
+
+(defun my-add-eglot-format-on-save-hook ()
+  "Register a buffer-local `before-save-hook' to format and organize imports."
+  ;; The depth of -10 places this before eglot's willSave notification,
+  ;; so that that notification reports the actual contents that will be saved.
+  ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md.
+  (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
+  (add-hook 'before-save-hook (lambda () (call-interactively #'eglot-code-action-organize-imports)) -9 t))
 
 (use-package eglot
   :straight (:type built-in)
