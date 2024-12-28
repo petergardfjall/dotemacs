@@ -49,13 +49,11 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
     (message "loading straight.el bootstrapper ...")
     (load bootstrap-file nil 'nomessage)))
 
+
 ;;
 ;; Lazily loaded utility functions.
 ;;
-(add-to-list 'load-path "~/.emacs.d/emacs-modules")
-
-(require 'my-global-keymap)
-
+(add-to-list 'load-path "~/.emacs.d/my-lisp")
 (autoload 'my-byte-offset "my-buffer-functions.el"
   "Report the byte offset (0-indexed) at point (cursor position)." t)
 (autoload 'my-rename-file-and-buffer "my-buffer-functions.el"
@@ -83,12 +81,9 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (autoload 'my-set-default-font-height "my-display-functions.el"
   "Reset the font height for the selected frame to the default font size." t)
 
+(add-to-list 'load-path "~/.emacs.d/my-conf")
+(require 'my-global-keymap)
 
-
-(defun my-highlight-todos ()
-  "Mark occurences of TODO with warning face."
-  (font-lock-add-keywords nil
-    '(("\\(TODO\\)" 1 'font-lock-warning-face prepend)) 'append))
 
 ;;
 ;; Start of actual initialization.
@@ -151,6 +146,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (add-hook 'text-mode-hook    #'display-line-numbers-mode)
   (add-hook 'prog-mode-hook    #'display-line-numbers-mode)
   ;; Highlight todo markers in code.
+  (defun my-highlight-todos ()
+    (font-lock-add-keywords nil '(("\\(TODO\\)" 1 'font-lock-warning-face prepend)) 'append))
   (add-hook 'prog-mode-hook #'my-highlight-todos)
   ;; highlight the current line
   (global-hl-line-mode t)
