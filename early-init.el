@@ -46,11 +46,21 @@
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.5)
 
+;; Optimize startup speed by disabling `file-name-handler-alist' and
+;; `vc-handled-backends'. Defaults are restored further down via the
+;; `emacs-startup-hook'.
+(defvar my--default-file-name-handler-alist file-name-handler-alist)
+(defvar my--default-vc-handled-backends vc-handled-backends)
+(setq file-name-handler-alist nil
+      vc-handled-backends nil)
+
 (add-hook 'emacs-startup-hook
           (lambda ()
             ;; Bumping the GC threshold is beneficial for language servers.
             (setq gc-cons-threshold (* 8 1024 1024) ;; 8 MiB (default: 800kB)
-                  gc-cons-percentage 0.1))) ;; Re-set default.
+                  gc-cons-percentage 0.1 ;; Re-set default.
+                  file-name-handler-alist my--default-file-name-handler-alist
+                  vc-handled-backends my--default-vc-handled-backends)))
 
 ;; Bumping the subprocess read chunk size is beneficial for language servers.
 (setq read-process-output-max (* 4 1024 1024)) ;; 4 MiB (default: 64kB)
