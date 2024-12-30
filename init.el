@@ -117,6 +117,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-recording)
 (require 'my-search)
 (require 'my-shell)
+(require 'my-version-control)
 
 
 ;; Transparent Remote Access, Multiple Protocols -- edit remote files
@@ -163,21 +164,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   :after yasnippet)
 
 
-;; A Git porcelain inside Emacs.
-(use-package magit
-  :straight t
-  ;; Lazily load when called for.
-  :bind (("C-x g" . magit-status)))
 
 
-;; Highlight diffs (in the fringe) for version-controlled buffers.
-(use-package diff-hl
-  :straight t
-  :hook ((prog-mode text-mode) . diff-hl-mode)
-  :diminish
-  :config
-  ;; refresh if magit does an update
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 
 ;; transparently open compressed files
