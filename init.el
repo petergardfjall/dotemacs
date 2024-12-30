@@ -120,12 +120,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-version-control)
 
 
-;; Transparent Remote Access, Multiple Protocols -- edit remote files
-(use-package tramp
-  :defer 5 ;; wait 5 seconds before loading
-  :config
-  ;; default method for transferring files (scp, ssh)
-  (customize-set-variable 'tramp-default-method "ssh"))
 
 
 ;; built-in on-the-fly syntax checking, which highlights erroneous lines.
