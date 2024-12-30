@@ -114,6 +114,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-global-keymap)
 (require 'my-navigation)
 (require 'my-orgmode)
+(require 'my-progmodes)
 (require 'my-projects)
 (require 'my-recording)
 (require 'my-search)
@@ -134,31 +135,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
     (define-key m (kbd "C-c s e p") #'flymake-show-project-diagnostics)
     ;; "show show errors in file"
     (define-key m (kbd "C-c s e f") #'flymake-show-buffer-diagnostics)))
-
-
-
-;; A language template system for emacs. lsp-mode auto-configures yasnippet for
-;; use with a given language server.  Write a snippet key and press the key
-;; associated with yas-expand (TAB by default) to have the snippet expanded. To
-;; see available snippets: M-x yas-describe-tables.
-;; Custom (per-mode) snippets can be placed under ~/.emacs.d/snippets/.
-(use-package yasnippet
-  :straight t
-  :defer 2
-  :diminish yas-minor-mode ; don't display on modeline
-  :config
-  ;; use yasnippet as a global minor mode
-  ;; note: it can also be activated per language/major-mode
-  ;;    see https://github.com/joaotavora/yasnippet
-  (yas-global-mode 1))
-
-
-;; A collection of snippets for many languages.
-(use-package yasnippet-snippets
-  :straight t
-  :after yasnippet)
-
-
 
 
 
@@ -228,6 +204,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
           (c . ("https://github.com/tree-sitter/tree-sitter-c"))
           (cpp . ("https://github.com/tree-sitter/tree-sitter-cpp"))
           (css . ("https://github.com/tree-sitter/tree-sitter-css"))
+          (dockerfile . ("https://github.com/camdencheek/tree-sitter-dockerfile"))
           (go . ("https://github.com/tree-sitter/tree-sitter-go"))
           (gomod . ("https://github.com/camdencheek/tree-sitter-go-mod"))
           (html . ("https://github.com/tree-sitter/tree-sitter-html"))
@@ -406,14 +383,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   (add-hook 'vcl-mode-hook #'my-strip-on-save-hook))
 
 
-;; Dockerfile editing
-(use-package dockerfile-mode
-  :straight t
-  :mode (("^.*Dockerfile$" . dockerfile-mode))
-  :config
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'dockerfile-mode-hook #'my-untabify-on-save-hook)
-  (add-hook 'dockerfile-mode-hook #'my-strip-on-save-hook))
 
 
 (use-package terraform-mode
@@ -509,15 +478,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 	 ("^Jenkinsfile$" . groovy-mode)))
 
 
-;; emacs mode to edit GraphQL schemas and queries (automtically enabled when
-;; opening .graphql and .gql files)
-(use-package graphql-mode
-  :straight t
-  :mode (("\\.gql$" . graphql-mode)
-         ("\\.graphql$" . graphql-mode))
-  :hook ((graphql-mode . prettier-mode)))
-
-
 
 
 ;; Built-in browse-url.el package.
@@ -525,23 +485,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight (:type built-in)
   ;; Lazily load when called for.
   :bind (("C-c u o" . browse-url-xdg-open))) ;; "URL open"
-
-
-
-
-
-(use-package highlight-indent-guides
-  :straight t
-  :diminish
-  :hook ((emacs-lisp-mode . highlight-indent-guides-mode))
-  :config
-  (setq highlight-indent-guides-method 'character))
-
-
-(use-package ruby-mode
-  :straight (:type built-in)
-  :mode (("\\.rb$"  . ruby-mode))
-  :config)
 
 
 ;;; Finalization
