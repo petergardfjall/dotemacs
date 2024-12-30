@@ -81,8 +81,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   "Reset the font height for the selected frame to the default font size." t)
 
 (add-to-list 'load-path "~/.emacs.d/my-conf")
-(require 'my-global-keymap)
-
 
 ;;
 ;; Start of actual initialization.
@@ -111,6 +109,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;
 (require 'my-appearance)
 (require 'my-completion)
+(require 'my-data-formats)
+(require 'my-global-keymap)
 (require 'my-navigation)
 (require 'my-projects)
 (require 'my-recording)
@@ -238,7 +238,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (add-to-list 'major-mode-remap-alist '(css-mode    . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(go-mode     . go-ts-mode))
   (add-to-list 'major-mode-remap-alist '(html-mode   . html-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(json-mode   . json-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode     . js-ts-mode))
   (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))
@@ -398,21 +397,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight t
   :hook (go-mode . flymake-golangci-load))
 
-
-;; Major mode for json file editing.
-(use-package json-ts-mode
-  :straight t
-  :mode (("\\.json$" . json-ts-mode))
-  :config
-  (setq
-   indent-tabs-mode nil
-   js-indent-level 2) ; use 2 space indentation
-  (setq indent-tabs-mode nil) ; no tabs for indentation
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'json-mode-hook 'my-untabify-on-save-hook)
-  (add-hook 'json-mode-hook 'my-strip-on-save-hook))
-
-
 ;; Major mode for JavaScript and React/JSX (built-into Emacs).
 ;; `js-mode` comes with syntax highlighting/indent support for JSX.
 (use-package js
@@ -430,22 +414,9 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 (use-package prettier
   :straight t
   :hook ((json-ts-mode . prettier-mode)
-	 (yaml-mode . prettier-mode)
+	 (yaml-ts-mode . prettier-mode)
 	 (gfm-mode . prettier-mode)
 	 (markdown-mode . prettier-mode)))
-
-
-;; Major mode for yaml file editing.
-(use-package yaml-mode
-  :straight t
-  :mode (("\\.yaml\\(.gotmpl\\)?$" . yaml-mode)
-         ("\\.yml\\(.gotmpl\\)?$" . yaml-mode))
-  :config
-  (setq indent-tabs-mode nil) ; no tabs for indentation
-  (add-hook 'yaml-mode-hook #'my-highlight-todos)
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'yaml-mode-hook 'my-untabify-on-save-hook)
-  (add-hook 'yaml-mode-hook 'my-strip-on-save-hook))
 
 
 ;; Major mode for markdown (.md) file editing.
@@ -527,17 +498,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   ;; add buffer-local save hook only for buffers in this mode
   (add-hook 'dockerfile-mode-hook #'my-untabify-on-save-hook)
   (add-hook 'dockerfile-mode-hook #'my-strip-on-save-hook))
-
-
-;; TOML editing
-(use-package toml-mode
-  :straight t
-  :mode (("\\.toml$" . toml-mode))
-  :config
-  (add-hook 'toml-mode-hook #'display-line-numbers-mode)
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'toml-mode-hook #'my-untabify-on-save-hook)
-  (add-hook 'toml-mode-hook #'my-strip-on-save-hook))
 
 
 (use-package terraform-mode
