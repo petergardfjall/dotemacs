@@ -392,10 +392,8 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 ;; edit JavaSciprt/JSX.  https://prettier.io/.
 (use-package prettier
   :straight t
-  :hook ((json-ts-mode . prettier-mode)
-	 (yaml-ts-mode . prettier-mode)
-	 (gfm-mode . prettier-mode)
-	 (markdown-mode . prettier-mode)))
+  ;; `autoload' whenever `prettier-mode' is invoked.
+  :commands (prettier-mode))
 
 ;; Varnish .vcl file editing.
 (use-package vcl-mode

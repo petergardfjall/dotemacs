@@ -36,6 +36,7 @@
          ("\\.markdown$" . gfm-mode)
          ;; Cheat sheets under ~/dotfiles/cheat/sheets.
          ("\\.cheat$" . markdown-mode))
+  :hook ((markdown-mode . prettier-mode))
   :init (setq markdown-command "pandoc")
   :config
   ;; no tabs for indentation
