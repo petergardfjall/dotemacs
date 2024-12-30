@@ -461,23 +461,10 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :config
 )
 
-
 ;; remove "ElDoc" from modeline
 (use-package eldoc
   :straight (:type built-in)
   :diminish eldoc-mode)
-
-
-;; can be used for working with .groovy and Jenkinsfile
-(use-package groovy-mode
-  :straight t
-  :disabled t
-  :mode (("\\.groovy$" . groovy-mode)
-         ("\\.gvy$" . groovy-mode)
-	 ("\\.gy$" . groovy-mode)
-	 ("^Jenkinsfile$" . groovy-mode)))
-
-
 
 
 ;; Built-in browse-url.el package.

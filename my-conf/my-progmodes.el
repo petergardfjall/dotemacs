@@ -17,6 +17,14 @@
   (add-hook 'dockerfile-ts-mode-hook #'my-strip-on-save-hook))
 
 
+(use-package groovy-mode
+  :straight t
+  :disabled t
+  :mode (("\\.groovy$" . groovy-mode)
+         ("\\.gvy$" . groovy-mode)
+	 ("\\.gy$" . groovy-mode)
+	 ("^Jenkinsfile$" . groovy-mode)))
+
 
 (use-package highlight-indent-guides
   :straight t
