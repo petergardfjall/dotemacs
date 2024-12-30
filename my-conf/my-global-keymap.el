@@ -34,6 +34,20 @@
   (define-key gm (kbd "C-x C--")  #'text-scale-adjust)
   (define-key gm (kbd "C-x C-0")  #'text-scale-adjust))
 
+
+;; `which-key' is a minor mode for Emacs that displays available key bindings
+;; following your currently entered incomplete command.
+(use-package which-key
+  :straight (:type built-in)
+  :diminish
+  :config
+  ;; Show popup at bottom of frame.
+  (which-key-setup-side-window-bottom)
+  ;; Delay popup appearance after starting to type a command.
+  (setq which-key-idle-delay 1.0)
+  (which-key-mode))
+
+
 (defun my-keyboard-quit-dwim ()
   "Do-What-I-Mean behaviour for a general `keyboard-quit'.
 The generic `keyboard-quit' does not do the expected thing when the

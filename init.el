@@ -642,17 +642,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :hook ((graphql-mode . prettier-mode)))
 
 
-;; `which-key' is a minor mode for Emacs that displays available key bindings
-;; following your currently entered incomplete command.
-(use-package which-key
-  :straight (:type built-in)
-  :diminish
-  :config
-  ;; Show popup at bottom of frame.
-  (which-key-setup-side-window-bottom)
-  ;; Delay popup appearance after starting to type a command.
-  (setq which-key-idle-delay 1.0)
-  (which-key-mode))
 
 
 ;; Built-in browse-url.el package.
