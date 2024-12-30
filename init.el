@@ -109,6 +109,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;
 (require 'my-appearance)
 (require 'my-completion)
+(require 'my-documentation)
 (require 'my-data-formats)
 (require 'my-global-keymap)
 (require 'my-navigation)
@@ -139,11 +140,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
     (define-key m (kbd "C-c s e f") #'flymake-show-buffer-diagnostics)))
 
 
-;; built-in on-the-fly spell checking for text buffers.
-(use-package flyspell
-  :straight (:type built-in)
-  :diminish
-  :hook ((text-mode . flyspell-mode)))
 
 ;; A language template system for emacs. lsp-mode auto-configures yasnippet for
 ;; use with a given language server.  Write a snippet key and press the key
@@ -417,67 +413,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 	 (yaml-ts-mode . prettier-mode)
 	 (gfm-mode . prettier-mode)
 	 (markdown-mode . prettier-mode)))
-
-
-;; Major mode for markdown (.md) file editing.
-(use-package markdown-mode
-  :straight t
-  :commands (markdown-mode gfm-mode)
-  :mode (("README\\.md$" . gfm-mode)
-         ("\\.md$" . gfm-mode)
-         ("\\.markdown$" . gfm-mode)
-         ;; cheat sheets under ~/dotfiles/cheat/sheets
-         ("\\.cheat$" . markdown-mode))
-  :init (setq markdown-command "pandoc")
-  :config
-  ;; no tabs for indentation
-  (setq indent-tabs-mode nil)
-  (setq markdown-list-indent-width 2)
-
-  ;; Define key-bindings.
-  (let ((m markdown-mode-map))
-    ;; Subtree, list, and table editing
-    (define-key m (kbd "M-<up>")    #'markdown-move-up)
-    (define-key m (kbd "M-<down>")  #'markdown-move-down)
-    (define-key m (kbd "M-<left>")  #'markdown-promote)
-    (define-key m (kbd "M-<right>") #'markdown-demote))
-
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'markdown-mode-hook 'my-untabify-on-save-hook))
-
-
-(use-package markdown-preview-mode
-  :straight t
-  ;; Lazily load when called for.
-  :bind ("C-c p m" . markdown-preview-mode)
-  :config
-  (setq markdown-fontify-code-blocks-natively t)
-  (setq markdown-preview-stylesheets
-        (list
-         ;; style very similar to github's for markdown rendering
-         "https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css"
-         ;; style that adds some margins
-         "https://petergardfjall.github.io/css/emacs-markdown/github-markdown-body.css"
-         ;; style for syntax highlighting of fenced codeblocks
-         "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"))
-  (setq markdown-preview-javascript
-        (list
-         ;; javascript lib for syntax highlighting of fenced code blocks
-         "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"
-         ;; javascript that applies the highlight js lib to the doc
-         "https://petergardfjall.github.io/js/emacs-markdown/github-markdown-block-highlight.js")))
-
-
-;; Major mode for AsciiDoc (.adoc) file editing.
-(use-package adoc-mode
-  :straight (adoc-mode :type git :host github :repo "bbatsov/adoc-mode"
-                       :branch "master")
-  :commands (adoc-mode)
-  :mode (("\\.adoc$" . adoc-mode))
-  :config
-  (add-hook 'adoc-mode-hook #'my-highlight-todos)
-  ;; Don't want orgtable "help" with formatting tables.
-  (add-hook 'adoc-mode-hook (lambda () (orgtbl-mode -1))))
 
 ;; Varnish .vcl file editing.
 (use-package vcl-mode
