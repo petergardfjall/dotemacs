@@ -111,51 +111,11 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;
 (require 'my-appearance)
 (require 'my-completion)
+(require 'my-navigation)
 (require 'my-projects)
 (require 'my-recording)
 (require 'my-search)
 (require 'my-shell)
-
-
-(use-package vundo
-  :straight t
-  :config
-  (setq vundo-glyph-alist vundo-unicode-symbols)
-  ;; Display visual undo tree.
-  (global-set-key (kbd "C-c u t") #'vundo)
-  (let ((m vundo-mode-map))
-    (define-key m (kbd "d") #'vundo-diff)
-    (define-key m (kbd "C-x u") #'undo)))
-
-
-(use-package postrace
-  ;; :load-path "~/dev/git/emacs-postrace"
-  :straight (postrace :type git :host github
-                      :repo "petergardfjall/emacs-postrace"
-                      :branch "main")
-  ;; Lazily load when called for.
-  :bind (("C-c p p" . postrace-push)
-	 ("C-c p b" . postrace-browse)))
-
-
-;; allows definition of hydras - families of commands with a common prefix
-(use-package hydra
-  :straight t
-  :config
-  ;; Window navigation/resizing hydra.
-  (defhydra hydra-windows (:hint nil)
-    "
-windmove: ← → ↑ ↓      resize: shift + {↤ ⭲ ⭱ ↧}"
-    ("<left>"    windmove-left)
-    ("<right>"   windmove-right)
-    ("<up>"      windmove-up)
-    ("<down>"    windmove-down)
-    ("S-<left>"  shrink-window-horizontally)
-    ("S-<right>" enlarge-window-horizontally)
-    ("S-<up>"    enlarge-window)
-    ("S-<down>"  shrink-window)
-    ("q"         nil))
-  (define-key global-map (kbd "C-c C-w") 'hydra-windows/body))
 
 
 ;; Transparent Remote Access, Multiple Protocols -- edit remote files
