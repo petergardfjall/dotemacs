@@ -19,7 +19,7 @@
   (define-key gm (kbd "C-c w") #'delete-trailing-whitespace)
   ;; Find definition of thing at point (if supported by mode).
   (define-key gm (kbd "<M-down>") #'xref-find-definitions)
-  (define-key gm (kbd "<M-up>")   #'xref-pop-marker-stack)
+  (define-key gm (kbd "<M-up>")   #'xref-go-back)
   (define-key gm (kbd "C-c f d")  #'xref-find-definitions)
   (define-key gm (kbd "C-c f r")  #'xref-find-references)
   ;; See if documentation can be found for thing at point.
