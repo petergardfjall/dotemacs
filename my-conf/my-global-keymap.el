@@ -28,7 +28,11 @@
   (define-key gm (kbd "C-x w <up>")    #'windmove-up)
   (define-key gm (kbd "C-x w <down>")  #'windmove-down)
   (define-key gm (kbd "C-x w <right>") #'windmove-right)
-  (define-key gm (kbd "C-x w <left>")  #'windmove-left))
+  (define-key gm (kbd "C-x w <left>")  #'windmove-left)
+  ;; Adjust font size.
+  (define-key gm (kbd "C-x C-+")  #'text-scale-adjust)
+  (define-key gm (kbd "C-x C--")  #'text-scale-adjust)
+  (define-key gm (kbd "C-x C-0")  #'text-scale-adjust))
 
 (defun my-keyboard-quit-dwim ()
   "Do-What-I-Mean behaviour for a general `keyboard-quit'.
