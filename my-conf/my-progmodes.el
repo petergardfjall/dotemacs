@@ -17,6 +17,23 @@
   (add-hook 'dockerfile-ts-mode-hook #'my-strip-on-save-hook))
 
 
+;; Emacs frontend for GNU Global (gtags) to generate and search code tags.
+;; Wraps the gtags and global command-line tools.
+(use-package ggtags
+  :straight t
+  :diminish
+  ;; add ggtags as a xref backend in emacs-lisp-mode (xref-find-definitions)
+  :hook ((emacs-lisp-mode . ggtags-mode))
+  ;; Lazily load when called for.
+  :bind (("C-c t c"   . my-ggtags-create)
+	 ("C-c t f d" . my-ggtags-find-definition)
+	 ("C-c t f r" . my-ggtags-find-reference))
+  :config
+  ;; interferes with beginning/end of buffer key bindings
+  (define-key ggtags-navigation-map (kbd "M->") nil)
+  (define-key ggtags-navigation-map (kbd "M-<") nil))
+
+
 (use-package groovy-mode
   :straight t
   :disabled t
