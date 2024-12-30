@@ -272,6 +272,7 @@ windmove: ← → ↑ ↓      resize: shift + {↤ ⭲ ⭱ ↧}"
 ;; Wraps the 'gtags' and 'global' command-line tools.
 (use-package ggtags
   :straight t
+  :diminish
   ;; add ggtags as a xref backend in emacs-lisp-mode (xref-find-definitions)
   :hook ((emacs-lisp-mode . ggtags-mode))
   ;; Lazily load when called for.
@@ -837,6 +838,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 
 (use-package highlight-indent-guides
   :straight t
+  :diminish
   :hook ((emacs-lisp-mode . highlight-indent-guides-mode))
   :config
   (setq highlight-indent-guides-method 'character))
