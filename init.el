@@ -2,9 +2,8 @@
 ;;;
 ;;; Commentary:
 ;;;
-;;; Makes heavy use of the use-package macro.  For bootstrapping, and installing
-;;; the use-package package a procedure similar to this is followed:
-;;; http://wikemacs.org/wiki/Package.el
+;;; Uses `use-package' for package configuration and `straight' for a
+;;; controlling versions of installed third-party packages.
 
 ;;; Code:
 
