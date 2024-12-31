@@ -179,7 +179,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (add-to-list 'major-mode-remap-alist '(go-mode     . go-ts-mode))
   (add-to-list 'major-mode-remap-alist '(html-mode   . html-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode     . js-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(python-mode . python-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))
   (add-to-list 'major-mode-remap-alist '(sql-mode    . sql-ts-mode))
   (add-to-list 'major-mode-remap-alist '(toml-mode   . toml-ts-mode))
@@ -222,6 +221,8 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 
 (use-package eglot
   :straight (:type built-in)
+  :commands (eglot eglot-ensure)
+  :diminish (eldoc-mode)
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure)
          (cmake-mode . eglot-ensure)
@@ -229,14 +230,10 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
          (go-ts-mode . eglot-ensure)
          (js-mode . eglot-ensure)
          (js-ts-mode . eglot-ensure)
-	 (python-mode . eglot-ensure)
-         (python-ts-mode . eglot-ensure)
          (rust-mode . eglot-ensure)
          (rust-ts-mode . eglot-ensure)
          (typescript-mode . eglot-ensure)
          (typescript-ts-mode . eglot-ensure))
-  :commands (eglot eglot-ensure)
-  :diminish (eldoc-mode)
   :config
   ;; Automatically shut down server after killing last managed buffer.
   (setq eglot-autoshutdown t)
@@ -287,32 +284,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
     (define-key m (kbd "C-c f r")  #'xref-find-references)
     (define-key m (kbd "C-c C-r")  #'eglot-rename)
     (define-key m (kbd "C-c d")    #'eldoc)))
-
-
-(use-package python
-  :straight (:type built-in)
-  :mode (("\\.py$" . python-mode))
-  ;; note: no :ensure since it is already built into emacs
-  :config
-   ;; no tabs for indentation
-  (setq indent-tabs-mode nil)
-  ;; PEP-8 calls for a limit of 79 characters per line.
-  (setq-local fill-column 79)
-  ;; Always use four space for each indentation level.
-  (setq-local python-indent-offset 4)
-  (setq-local python-indent-guess-indent-offset 'nil)
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'python-mode-hook 'my-untabify-on-save-hook)
-  (add-hook 'python-mode-hook 'my-strip-on-save-hook))
-
-
-;; Use sphinx-doc when python-mode is activated. Gives a templated docstring
-;; when pressing C-c M-d in function head.
-(use-package sphinx-doc
-  :straight t
-  :commands python-mode
-  :config
-  (sphinx-doc-mode))
 
 
 (use-package go-ts-mode

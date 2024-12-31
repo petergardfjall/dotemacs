@@ -58,10 +58,37 @@
   :hook ((graphql-mode . prettier-mode)))
 
 
+(use-package python-mode
+  :straight (:type built-in)
+  :mode (("\\.py$" . python-mode))
+  :init
+  ;; Add settings for buffers in this mode.
+  (add-hook 'python-mode-hook
+            (lambda ()
+              (setq-local
+               indent-tabs-mode nil ;; No tabs for indentation.
+               ;; PEP-8 calls for max 79 characters per line.
+               fill-column 79
+               python-indent-offset 4
+               python-indent-guess-indent-offset nil)))
+  (add-hook 'python-mode-hook #'my-untabify-on-save-hook)
+  (add-hook 'python-mode-hook #'my-strip-on-save-hook)
+  (add-hook 'python-mode-hook #'eglot-ensure))
+
+
 (use-package ruby-mode
   :straight (:type built-in)
   :mode (("\\.rb$"  . ruby-mode))
   :config)
+
+
+;; Use `sphinx-doc' when `python-mode' is activated. Gives a templated docstring
+;; when pressing "C-c M-d" in function head.
+(use-package sphinx-doc
+  :straight t
+  :commands python-mode
+  :config
+  (sphinx-doc-mode))
 
 
 ;; A language template system for emacs. lsp-mode auto-configures yasnippet for
