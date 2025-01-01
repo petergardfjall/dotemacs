@@ -82,6 +82,16 @@
   :config)
 
 
+(use-package sh-script
+  :straight (:type built-in)
+  :commands (sh-mode)
+  :mode (("\\.sh$" . sh-mode)
+         ("\\.env$" . sh-mode))
+  :init
+  (add-hook 'sh-mode-hook #'my-untabify-on-save-hook)
+  (add-hook 'sh-mode-hook #'my-strip-on-save-hook))
+
+
 ;; Use `sphinx-doc' when `python-mode' is activated. Gives a templated docstring
 ;; when pressing "C-c M-d" in function head.
 (use-package sphinx-doc

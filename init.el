@@ -150,19 +150,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;; Development/coding
 ;;;
 
-
-
-
-;; when saving a buffer in sh-mode: untabify and delete trailing whitespace
-(use-package sh-script
-  :mode (("\\.sh$" . sh-mode)
-         ("\\.env$" . sh-mode))
-  :config
-  ;; use bash-language-server (installed separately via npm)
-  (add-hook 'sh-mode-hook 'my-untabify-on-save-hook)
-  (add-hook 'sh-mode-hook 'my-strip-on-save-hook))
-
-
 ;; Integrates the tree-sitter incremental language parsing library. It supports
 ;; syntax highlighting and comes with replacement major-modes for many languages
 ;; `<language>-ts-mode'. In the future a lot of interesting functionality might
