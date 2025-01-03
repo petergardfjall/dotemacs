@@ -127,21 +127,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 
 
 
-;; built-in on-the-fly syntax checking, which highlights erroneous lines.
-(use-package flymake
-  :straight (:type built-in)
-  :diminish
-  :hook ((prog-mode text-mode) . flymake-mode)
-  :config
-  (let ((m flymake-mode-map))
-    ;; "show errors in project"
-    (define-key m (kbd "C-c s e p") #'flymake-show-project-diagnostics)
-    ;; "show show errors in file"
-    (define-key m (kbd "C-c s e f") #'flymake-show-buffer-diagnostics)))
-
-
-
-
 ;; transparently open compressed files
 (use-package auto-compression-mode
   :straight (:type built-in)

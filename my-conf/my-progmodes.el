@@ -95,6 +95,19 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
     (define-key m (kbd "C-c d")    #'eldoc)))
 
 
+;; On-the-fly syntax checking, which highlights erroneous lines.
+(use-package flymake
+  :straight (:type built-in)
+  :diminish
+  :hook ((prog-mode text-mode) . flymake-mode)
+  :config
+  (let ((m flymake-mode-map))
+    ;; "show errors in project"
+    (define-key m (kbd "C-c s e p") #'flymake-show-project-diagnostics)
+    ;; "show show errors in file"
+    (define-key m (kbd "C-c s e f") #'flymake-show-buffer-diagnostics)))
+
+
 ;; Emacs frontend for GNU Global (gtags) to generate and search code tags.
 ;; Wraps the gtags and global command-line tools.
 (use-package ggtags
