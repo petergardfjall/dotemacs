@@ -114,6 +114,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-completion)
 (require 'my-documentation)
 (require 'my-data-formats)
+(require 'my-debug)
 (require 'my-global-keymap)
 (require 'my-navigation)
 (require 'my-orgmode)
@@ -139,11 +140,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;;
 
 
-;; Debug programs using `delve'. This debugger relies on Emacs' GUD framework.
-(use-package go-dlv
-  :straight t
-  :commands (dlv dlv-current-function)
-  :config)
 
 ;; golangci-lint support via flymake
 (use-package flymake-golangci
