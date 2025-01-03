@@ -36,11 +36,7 @@
   :diminish (eldoc-mode)
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure)
-         (cmake-mode . eglot-ensure)
-         (rust-mode . eglot-ensure)
-         (rust-ts-mode . eglot-ensure)
-         (typescript-mode . eglot-ensure)
-         (typescript-ts-mode . eglot-ensure))
+         (cmake-mode . eglot-ensure))
   :config
   ;; Automatically shut down server after killing last managed buffer.
   (setq eglot-autoshutdown t)
@@ -216,6 +212,21 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight (:type built-in)
   :mode (("\\.rb$"  . ruby-mode))
   :config)
+
+
+(use-package rust-mode
+  :straight t
+  :commands (rust-ts-mode rust-mode)
+  :mode (("\\.rs$" . rust-ts-mode))
+  :init
+  (add-to-list 'major-mode-remap-alist '(rust-mode . rust-ts-mode))
+  ;; Set up on-save hooks to have eglot format and organize imports.
+  (add-hook 'rust-ts-mode-hook #'my--add-eglot-format-on-save-hook)
+  (add-hook 'rust-ts-mode-hook (lambda ()
+                                 (setq-local
+                                  indent-tabs-mode nil
+                                  rust-format-on-save t)))
+  (add-hook 'rust-ts-mode-hook #'eglot-ensure))
 
 
 (use-package sh-script
