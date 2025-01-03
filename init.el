@@ -188,14 +188,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 
 
 
-(use-package terraform-mode
-  :straight t
-  :disabled t
-  :mode (("\\.tf$" . terraform-mode))
-  :config
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'terraform-mode-hook #'my-untabify-on-save-hook)
-  (add-hook 'terraform-mode-hook #'my-strip-on-save-hook))
 
 
 (use-package protobuf-mode

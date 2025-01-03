@@ -191,6 +191,15 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   (sphinx-doc-mode))
 
 
+(use-package terraform-mode
+  :straight t
+  :mode (("\\.tf$" . terraform-mode))
+  :init
+  ;; Add buffer-local save hook only for buffers in this mode.
+  (add-hook 'terraform-mode-hook #'my-untabify-on-save-hook)
+  (add-hook 'terraform-mode-hook #'my-strip-on-save-hook))
+
+
 ;; Integrates the tree-sitter incremental language parsing library. It supports
 ;; syntax highlighting and comes with replacement major-modes for many languages
 ;; '<language>-ts-mode'.
@@ -243,7 +252,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :disabled t
   :mode (("\\.vcl$" . vcl-mode))
   :init
-  ;; add buffer-local save hook only for buffers in this mode
+  ;; Add buffer-local save hook only for buffers in this mode.
   (add-hook 'vcl-mode-hook #'my-untabify-on-save-hook)
   (add-hook 'vcl-mode-hook #'my-strip-on-save-hook))
 
