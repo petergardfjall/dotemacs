@@ -105,6 +105,12 @@
   :demand t)
 
 
+;; Remove "ElDoc" from modeline.
+(use-package eldoc
+  :straight (:type built-in)
+  :diminish eldoc-mode)
+
+
 (use-package immaterial-theme
   ;; :load-path "~/dev/git/emacs-immaterial-theme"
   :straight (immaterial-theme

@@ -151,8 +151,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   :hook (go-mode . flymake-golangci-load))
 
 
-
-
 (defun my-c-mode-common ()
   "Apply common settings for 'c-mode' and 'c++-mode'."
   (setq c-basic-offset   4
@@ -195,12 +193,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
          ("\\.cmake$" . cmake-mode))
   :config
 )
-
-;; remove "ElDoc" from modeline
-(use-package eldoc
-  :straight (:type built-in)
-  :diminish eldoc-mode)
-
 
 ;; Built-in browse-url.el package.
 (use-package browse-url
