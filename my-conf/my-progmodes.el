@@ -17,6 +17,84 @@
   (add-hook 'dockerfile-ts-mode-hook #'my-strip-on-save-hook))
 
 
+(defun my--add-eglot-format-on-save-hook ()
+  "Register a buffer-local `before-save-hook' to format and organize imports."
+  ;; The depth of -10 places this before eglot's willSave notification,
+  ;; so that that notification reports the actual contents that will be saved.
+  ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md.
+  (add-hook 'before-save-hook #'eglot-format-buffer -10 t)
+  (add-hook 'before-save-hook (lambda () (call-interactively #'eglot-code-action-organize-imports)) -9 t))
+
+;; Eglot is the Emacs client for the Language Server Protocol (LSP).
+;; To use a language server with a certain type of source file first make sure
+;; the language server is installed (and present on the PATH), then open a
+;; source file buffer and run `eglot' or `eglot-ensure'. All source files in the
+;; project will be managed by Eglot.
+(use-package eglot
+  :straight (:type built-in)
+  :commands (eglot eglot-ensure)
+  :diminish (eldoc-mode)
+  :hook ((c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (cmake-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (js-ts-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (rust-ts-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (typescript-ts-mode . eglot-ensure))
+  :config
+  ;; Automatically shut down server after killing last managed buffer.
+  (setq eglot-autoshutdown t)
+  ;; Require a manual restart (`eglot') when language servers crash.
+  (setq eglot-autoreconnect nil)
+  ;; Prevent long identifier documentation to be shown when cursor "hovers" over
+  ;; an identifier.
+  (setq eldoc-echo-area-use-multiline-p nil)
+  ;; Be explicit about which LSP servers to use.
+  (add-to-list 'eglot-server-programs '((c-mode) . ("clangd")))
+  (add-to-list 'eglot-server-programs '((c++-mode) . ("clangd")))
+  (add-to-list 'eglot-server-programs '((cmake-mode) . ("cmake-language-server")))
+  (add-to-list 'eglot-server-programs '((js-mode js-ts-mode tsx-ts-mode typescript-ts-mode typescript-mode)
+                                        . ("typescript-language-server" "--stdio")))
+  ;; See https://rust-analyzer.github.io/manual.html#emacs
+  (add-to-list 'eglot-server-programs '((rust-mode rust-ts-mode) . ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+
+  ;; Additional gopls settings.
+  ;; See https://github.com/golang/tools/blob/master/gopls/doc/emacs.md
+  ;;     https://github.com/golang/tools/blob/master/gopls/doc/settings.md
+  (setq-default eglot-workspace-configuration
+                '((:gopls
+                   (:ui.completion.usePlaceholders . t)
+                   ;; (:ui.diagnostic.staticcheck . t)
+                   ;; For proper operation in files with certain build tags.
+                   (:build.buildFlags . ["-tags=integration,db"]))))
+
+  ;; If `xref-find-definitions' lands in a file outside the project, momentarily
+  ;; consider that file managed by the same language server. This avoids
+  ;; starting a new language server for such external files (startup cost).
+  (setq eglot-extend-to-xref t)
+
+  (defun my--find-workspace-symbol ()
+    "Look up a workspace symbol by name.
+Prompts the user for input. It does the equivalent of `C-u M-.'."
+    (interactive)
+    (setq current-prefix-arg '(1)) ;; programatically calls with prefix argument "C-u".
+    (call-interactively 'xref-find-definitions))
+
+  ;; Define key-bindings.
+  (let ((m eglot-mode-map))
+    (define-key m (kbd "<M-down>") #'xref-find-definitions)
+    (define-key m (kbd "<M-up>")   #'xref-go-back)
+    (define-key m (kbd "C-c f d")  #'xref-find-definitions)
+    ;; find workspace symbol
+    (define-key m (kbd "C-c f s")  #'my--find-workspace-symbol)
+    (define-key m (kbd "C-c f i")  #'eglot-find-implementation)
+    (define-key m (kbd "C-c f r")  #'xref-find-references)
+    (define-key m (kbd "C-c C-r")  #'eglot-rename)
+    (define-key m (kbd "C-c d")    #'eldoc)))
+
+
 ;; Emacs frontend for GNU Global (gtags) to generate and search code tags.
 ;; Wraps the gtags and global command-line tools.
 (use-package ggtags
