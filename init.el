@@ -150,25 +150,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   :straight t
   :hook (go-mode . flymake-golangci-load))
 
-;; Major mode for JavaScript and React/JSX (built-into Emacs).
-;; `js-mode` comes with syntax highlighting/indent support for JSX.
-(use-package js
-  :straight (:type built-in)
-  :mode (("\\.js$" . js-ts-mode)
-	 ("\\.jsx$" . js-ts-mode))
-  :config
-  (setq
-   indent-tabs-mode nil
-   js-indent-level 2))
-
-
-;; Enable the Prettier code-formatter's minor mode to format on save whenever we
-;; edit JavaSciprt/JSX.  https://prettier.io/.
-(use-package prettier
-  :straight t
-  ;; `autoload' whenever `prettier-mode' is invoked.
-  :commands (prettier-mode))
-
 
 ;; Rust-mode
 (use-package rust-mode

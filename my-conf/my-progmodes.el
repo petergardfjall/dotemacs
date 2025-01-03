@@ -37,8 +37,6 @@
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure)
          (cmake-mode . eglot-ensure)
-         (js-mode . eglot-ensure)
-         (js-ts-mode . eglot-ensure)
          (rust-mode . eglot-ensure)
          (rust-ts-mode . eglot-ensure)
          (typescript-mode . eglot-ensure)
@@ -158,7 +156,32 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :straight t
   :mode (("\\.gql$" . graphql-mode)
          ("\\.graphql$" . graphql-mode))
-  :hook ((graphql-mode . prettier-mode)))
+  :init
+  (add-hook 'graphql-mode #'prettier-mode))
+
+
+;; Major mode for JavaScript and React/JSX (built-into Emacs). `js-ts-mode'
+;; comes with syntax highlighting/indent support for JSX.
+(use-package js
+  :straight (:type built-in)
+  :mode (("\\.js$" . js-ts-mode)
+         ("\\.jsx$" . js-ts-mode))
+  :commands (js-mode js-ts-mode)
+  :init
+  (add-hook 'js-ts-mode-hook #'eglot-ensure)
+  (add-hook 'js-ts-mode-hook #'prettier-mode)
+  (add-hook 'js-ts-mode-hook
+            (lambda () (setq-local
+                        indent-tabs-mode nil
+                        js-indent-level 2))))
+
+
+;; Enable the Prettier code-formatter's minor mode to format on save whenever we
+;; edit JavaSciprt/JSX.  https://prettier.io/.
+(use-package prettier
+  :straight t
+  ;; Will `autoload' whenever `prettier-mode' is invoked.
+  :commands (prettier-mode))
 
 
 (use-package protobuf-mode
@@ -236,7 +259,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   (add-to-list 'major-mode-remap-alist '(c++-mode    . c++-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode    . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(html-mode   . html-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(js-mode     . js-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))
   (add-to-list 'major-mode-remap-alist '(sql-mode    . sql-ts-mode))
   (add-to-list 'major-mode-remap-alist '(toml-mode   . toml-ts-mode))
