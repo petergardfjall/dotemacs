@@ -163,7 +163,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (add-to-list 'major-mode-remap-alist '(c-mode      . c-ts-mode))
   (add-to-list 'major-mode-remap-alist '(c++-mode    . c++-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode    . css-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(go-mode     . go-ts-mode))
   (add-to-list 'major-mode-remap-alist '(html-mode   . html-ts-mode))
   (add-to-list 'major-mode-remap-alist '(js-mode     . js-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))
@@ -198,7 +197,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
         (message "`%s' treesit language grammar installed." lang)))))
 
 
-(defun my-add-eglot-format-on-save-hook ()
+(defun my--add-eglot-format-on-save-hook ()
   "Register a buffer-local `before-save-hook' to format and organize imports."
   ;; The depth of -10 places this before eglot's willSave notification,
   ;; so that that notification reports the actual contents that will be saved.
@@ -273,16 +272,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
     (define-key m (kbd "C-c d")    #'eldoc)))
 
 
-(use-package go-ts-mode
-  :straight (:type built-in)
-  :mode (("\\.go$"  . go-ts-mode)
-	 ("^go.mod$" . go-ts-mode))
-  :config
-  (message "go-ts-mode config ...")
-  ;; Set up on-save hooks to have eglot format and organize imports.
-  (add-hook 'go-ts-mode-hook 'my-add-eglot-format-on-save-hook)
-  ;; Sets the fill column (where to break paragraphs on M-q)
-  (add-hook 'go-ts-mode-hook (lambda () (setq fill-column 100))))
 
 
 ;; Debug programs using `delve'. This debugger relies on Emacs' GUD framework.
@@ -355,7 +344,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :mode (("\\.rs$" . rust-mode))
   :config
   ;; Set up on-save hooks to have eglot format and organize imports.
-  (add-hook 'rust-mode-hook 'my-add-eglot-format-on-save-hook)
+  (add-hook 'rust-mode-hook #'my--add-eglot-format-on-save-hook)
   (setq indent-tabs-mode nil)
   ;; automatic formatting
   (setq rust-format-on-save t))

@@ -51,6 +51,18 @@
   (setq highlight-indent-guides-method 'character))
 
 
+(use-package go-ts-mode
+  :straight (:type built-in)
+  :commands (go-ts-mode)
+  :init
+  (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
+  ;; Set up on-save hooks to have eglot format and organize imports.
+  (add-hook 'go-ts-mode-hook #'my--add-eglot-format-on-save-hook)
+  ;; Sets the fill column (where to break paragraphs on M-q)
+  (add-hook 'go-ts-mode-hook (lambda () (setq-local fill-column 100)))
+  (add-hook 'go-ts-mode-hook #'eglot-ensure))
+
+
 (use-package graphql-mode
   :straight t
   :mode (("\\.gql$" . graphql-mode)
