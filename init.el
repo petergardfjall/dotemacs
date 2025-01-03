@@ -185,22 +185,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   :commands (prettier-mode))
 
 
-
-
-
-
-
-(use-package protobuf-mode
-  :straight t
-  :mode (("\\.proto$" . protobuf-mode))
-  :config
-  (add-hook 'protobuf-mode-hook #'my-highlight-todos)
-  (add-hook 'protobuf-mode-hook #'my-enable-line-numbers-mode)
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'protobuf-mode-hook #'my-untabify-on-save-hook)
-  (add-hook 'protobuf-mode-hook #'my-strip-on-save-hook))
-
-
 ;; Rust-mode
 (use-package rust-mode
   :straight t

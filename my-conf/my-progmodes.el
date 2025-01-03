@@ -148,6 +148,16 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :hook ((graphql-mode . prettier-mode)))
 
 
+(use-package protobuf-mode
+  :straight t
+  :mode (("\\.proto$" . protobuf-mode))
+  :init
+  (add-hook 'protobuf-mode-hook #'my-highlight-todos)
+  ;; Add buffer-local save hook only for buffers in this mode.
+  (add-hook 'protobuf-mode-hook #'my-untabify-on-save-hook)
+  (add-hook 'protobuf-mode-hook #'my-strip-on-save-hook))
+
+
 (use-package python-mode
   :straight (:type built-in)
   :mode (("\\.py$" . python-mode))
