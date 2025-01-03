@@ -237,6 +237,17 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
         (message "`%s' treesit language grammar installed." lang)))))
 
 
+;; Varnish .vcl file editing.
+(use-package vcl-mode
+  :straight t
+  :disabled t
+  :mode (("\\.vcl$" . vcl-mode))
+  :init
+  ;; add buffer-local save hook only for buffers in this mode
+  (add-hook 'vcl-mode-hook #'my-untabify-on-save-hook)
+  (add-hook 'vcl-mode-hook #'my-strip-on-save-hook))
+
+
 ;; A language template system for emacs. lsp-mode auto-configures yasnippet for
 ;; use with a given language server.  Write a snippet key and press the key
 ;; associated with yas-expand (TAB by default) to have the snippet expanded. To

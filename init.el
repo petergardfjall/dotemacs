@@ -184,15 +184,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   ;; `autoload' whenever `prettier-mode' is invoked.
   :commands (prettier-mode))
 
-;; Varnish .vcl file editing.
-(use-package vcl-mode
-  :straight t
-  :disabled t
-  :mode (("\\.vcl$" . vcl-mode))
-  :config
-  ;; add buffer-local save hook only for buffers in this mode
-  (add-hook 'vcl-mode-hook #'my-untabify-on-save-hook)
-  (add-hook 'vcl-mode-hook #'my-strip-on-save-hook))
 
 
 
