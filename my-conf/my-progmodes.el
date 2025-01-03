@@ -128,17 +128,9 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 	 ("^Jenkinsfile$" . groovy-mode)))
 
 
-(use-package highlight-indent-guides
-  :straight t
-  :diminish
-  :hook ((emacs-lisp-mode . highlight-indent-guides-mode))
-  :config
-  (setq highlight-indent-guides-method 'character))
-
-
 (use-package go-ts-mode
   :straight (:type built-in)
-  :commands (go-ts-mode)
+  :commands (go-mode go-ts-mode)
   :init
   (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
   ;; Set up on-save hooks to have eglot format and organize imports.
@@ -156,20 +148,25 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   (add-hook 'graphql-mode #'prettier-mode))
 
 
+(use-package highlight-indent-guides
+  :straight t
+  :diminish
+  :hook ((emacs-lisp-mode . highlight-indent-guides-mode))
+  :config
+  (setq highlight-indent-guides-method 'character))
+
+
 ;; Major mode for JavaScript and React/JSX (built-into Emacs). `js-ts-mode'
 ;; comes with syntax highlighting/indent support for JSX.
-(use-package js
+(use-package js-ts-mode
   :straight (:type built-in)
+  :commands (js-mode js-ts-mode)
   :mode (("\\.js$" . js-ts-mode)
          ("\\.jsx$" . js-ts-mode))
-  :commands (js-mode js-ts-mode)
   :init
+  (add-to-list 'major-mode-remap-alist '(js-mode . js-ts-mode))
   (add-hook 'js-ts-mode-hook #'eglot-ensure)
-  (add-hook 'js-ts-mode-hook #'prettier-mode)
-  (add-hook 'js-ts-mode-hook
-            (lambda () (setq-local
-                        indent-tabs-mode nil
-                        js-indent-level 2))))
+  (add-hook 'js-ts-mode-hook #'prettier-mode))
 
 
 ;; Enable the Prettier code-formatter's minor mode to format on save whenever we
@@ -290,6 +287,8 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
           (ruby . ("https://github.com/tree-sitter/tree-sitter-ruby"))
           (rust . ("https://github.com/tree-sitter/tree-sitter-rust"))
           (toml . ("https://github.com/tree-sitter/tree-sitter-toml"))
+          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "tsx/src"))
+          (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "v0.23.2" "typescript/src"))
           (yaml . ("https://github.com/ikatyang/tree-sitter-yaml"))))
   :config
   ;; Install language grammars if not already present.
@@ -300,6 +299,17 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
         (sleep-for 0.5)
         (treesit-install-language-grammar lang)
         (message "`%s' treesit language grammar installed." lang)))))
+
+
+(use-package typescript-ts-mode
+  :straight (:type built-in)
+  :commands (typescript-mode typescript-ts-mode)
+  :mode (("\\.ts$" . typescript-ts-mode)
+         ("\\.tsx$" . typescript-ts-mode))
+  :init
+  (add-to-list 'major-mode-remap-alist '(typescript-mode . typescript-ts-mode))
+  (add-hook 'typescript-ts-mode-hook #'eglot-ensure)
+  (add-hook 'typescript-ts-mode-hook #'prettier-mode))
 
 
 ;; Varnish .vcl file editing.
