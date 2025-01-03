@@ -102,6 +102,14 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
     (define-key m (kbd "C-c s e f") #'flymake-show-buffer-diagnostics)))
 
 
+;; golangci-lint support via Flymake.
+(use-package flymake-golangci
+  :straight t
+  :disabled t
+  :commands (flymake-golangci-load)
+  :hook (go-ts-mode . flymake-golangci-load))
+
+
 ;; Emacs frontend for GNU Global (gtags) to generate and search code tags.
 ;; Wraps the gtags and global command-line tools.
 (use-package ggtags

@@ -139,14 +139,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 ;;; Development/coding
 ;;;
 
-
-
-;; golangci-lint support via flymake
-(use-package flymake-golangci
-  :straight t
-  :hook (go-mode . flymake-golangci-load))
-
-
 (defun my-c-mode-common ()
   "Apply common settings for 'c-mode' and 'c++-mode'."
   (setq c-basic-offset   4
