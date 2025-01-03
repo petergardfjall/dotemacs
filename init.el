@@ -80,6 +80,9 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (autoload 'my-set-default-font-height "my-display-functions.el"
   "Reset the font height for the selected frame to the default font size." t)
 
+(autoload 'my-treesit-install-language "my-treesit-functions.el"
+  "Install/update a treesit grammar for LANG." t)
+
 (add-to-list 'load-path "~/.emacs.d/my-conf")
 
 ;;
