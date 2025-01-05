@@ -25,7 +25,8 @@
   "Initial height of Emacs frame.")
 (defvar my-font "Roboto Mono"
   "Text font to use.
-For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
+Examples include: Source Code Pro, Ubuntu Mono, Cousine, JetBrains Mono,
+Hack Nerd Font.")
 (defvar my-font-size 10.5 "Font size to use in points (for example, 10.5).")
 
 ;;

@@ -100,6 +100,14 @@
     (define-key m (kbd "M-A") #'marginalia-cycle)))
 
 
+(use-package nerd-icons-completion
+  :straight t
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
+
+
 ;; Orderless provides another type of `completion-styles' for `completing-read'
 ;; where space-separated words can be input as search terms.
 (use-package orderless
