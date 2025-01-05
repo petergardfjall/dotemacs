@@ -8,6 +8,36 @@
 (message "loading %s ..." load-file-name)
 
 
+(use-package c-mode
+  :straight (:type built-in)
+  :commands (c-mode c-ts-mode)
+  :init
+  (add-to-list 'major-mode-remap-alist '(c-mode . c-ts-mode))
+  ;; Set up on-save hooks to have eglot format and organize imports.
+  (add-hook 'c-ts-mode-hook #'eglot-ensure)
+  (add-hook 'c-ts-mode-hook
+            (lambda () (add-hook 'before-save-hook #'clang-format-buffer nil t))))
+
+
+(use-package c++-mode
+  :straight (:type built-in)
+  :commands (c++-mode c++-ts-mode)
+  :init
+  (add-to-list 'major-mode-remap-alist '(c++-mode . c++-ts-mode))
+  ;; Set up on-save hooks to have eglot format and organize imports.
+  (add-hook 'c++-ts-mode-hook #'eglot-ensure)
+  (add-hook 'c++-ts-mode-hook
+            (lambda () (add-hook 'before-save-hook #'clang-format-buffer nil t))))
+
+
+(use-package clang-format
+  :straight t
+  :commands (clang-format clang-format-buffer clang-format-region)
+  :config
+  ;; Style to use when calling `clang-format-buffer' unless the project has a
+  ;; .clang-format file.
+  (setq clang-format-fallback-style "WebKit"))
+
 ;; Dockerfile editing
 (use-package dockerfile-ts-mode
   :straight (:type built-in)
@@ -34,9 +64,6 @@
   :straight (:type built-in)
   :commands (eglot eglot-ensure)
   :diminish (eldoc-mode)
-  :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure)
-         (cmake-mode . eglot-ensure))
   :config
   ;; Automatically shut down server after killing last managed buffer.
   (setq eglot-autoshutdown t)
@@ -271,8 +298,6 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
   :init
   ;; Use treesit-based major-modes where grammars are available.
   (add-to-list 'major-mode-remap-alist '(bash-mode   . bash-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c-mode      . c-ts-mode))
-  (add-to-list 'major-mode-remap-alist '(c++-mode    . c++-ts-mode))
   (add-to-list 'major-mode-remap-alist '(css-mode    . css-ts-mode))
   (add-to-list 'major-mode-remap-alist '(html-mode   . html-ts-mode))
   (add-to-list 'major-mode-remap-alist '(ruby-mode   . ruby-ts-mode))

@@ -135,44 +135,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   :config
   (auto-compression-mode t))
 
-;;;
-;;; Development/coding
-;;;
-
-(defun my-c-mode-common ()
-  "Apply common settings for 'c-mode' and 'c++-mode'."
-  (setq c-basic-offset   4
-        tab-width        4
-        indent-tabs-mode nil)
-  ;; enable use of clang-format
-  (use-package clang-format
-    :straight t
-    :config
-    ;; style to use when calling `clang-format-buffer`
-    (setq clang-format-style "WebKit"))
-
-  ;; add buffer-local save hooks
-  (add-hook 'before-save-hook #'clang-format-buffer nil t))
-
-(defun my-c-mode ()
-  "Apply settings for 'c-mode'."
-  (message "c-mode config ...")
-  (my-c-mode-common))
-
-(defun my-c++-mode ()
-  "Apply settings for 'c++-mode'."
-  (message "c++-mode config ...")
-  (my-c-mode-common))
-
-
-;; C and C++ setup.
-(use-package cc-mode
-  :straight (:type built-in)
-  :hook cc-mode
-  :config
-  (add-hook 'c-mode-hook   #'my-c-mode)
-  (add-hook 'c++-mode-hook #'my-c++-mode))
-
 
 ;; cmake setup.
 (use-package cmake-mode
