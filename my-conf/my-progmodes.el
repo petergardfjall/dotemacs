@@ -38,6 +38,15 @@
   ;; .clang-format file.
   (setq clang-format-fallback-style "WebKit"))
 
+
+(use-package cmake-mode
+  :straight t
+  :commands (cmake-mode)
+  :mode (("CMakeLists.txt$" . cmake-mode)
+         ("\\.cmake$" . cmake-mode))
+  :config)
+
+
 ;; Dockerfile editing
 (use-package dockerfile-ts-mode
   :straight (:type built-in)

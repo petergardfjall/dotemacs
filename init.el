@@ -136,14 +136,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
   (auto-compression-mode t))
 
 
-;; cmake setup.
-(use-package cmake-mode
-  :straight t
-  :mode (("CMakeLists.txt$" . cmake-mode)
-         ("\\.cmake$" . cmake-mode))
-  :config
-)
-
 ;; Built-in browse-url.el package.
 (use-package browse-url
   :straight (:type built-in)
