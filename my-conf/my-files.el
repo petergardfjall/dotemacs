@@ -16,5 +16,13 @@
   (auto-compression-mode t))
 
 
+(use-package dired
+  :straight (:type built-in)
+  :config
+  (let ((m dired-mode-map))
+    (define-key m (kbd "M-<down>") #'dired-find-file)
+    (define-key m (kbd "M-<up>")   #'dired-up-directory)))
+
+
 (provide 'my-files)
 ;;; my-files.el ends here.
