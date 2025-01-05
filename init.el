@@ -115,6 +115,7 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-documentation)
 (require 'my-data-formats)
 (require 'my-debug)
+(require 'my-files)
 (require 'my-global-keymap)
 (require 'my-navigation)
 (require 'my-orgmode)
@@ -125,15 +126,6 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-shell)
 (require 'my-version-control)
 
-
-
-
-;; transparently open compressed files
-(use-package auto-compression-mode
-  :straight (:type built-in)
-  :defer 5
-  :config
-  (auto-compression-mode t))
 
 
 ;; Built-in browse-url.el package.
