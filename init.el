@@ -126,17 +126,9 @@ For example, `Source Code Pro`, `Ubuntu Mono`,`Cousine`, `JetBrains Mono`).")
 (require 'my-shell)
 (require 'my-version-control)
 
-
-
-;; Built-in browse-url.el package.
-(use-package browse-url
-  :straight (:type built-in)
-  ;; Lazily load when called for.
-  :bind (("C-c u o" . browse-url-xdg-open))) ;; "URL open"
-
-
+;;;
 ;;; Finalization
-
+;;;
 (defun my-elapsed-time ()
   "Get elapsed time (float seconds) since Emacs was started."
   (float-time (time-subtract (current-time) emacs-start-time)))

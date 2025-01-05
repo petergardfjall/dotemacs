@@ -7,6 +7,15 @@
 
 (message "loading %s ..." load-file-name)
 
+
+;; Built-in `browse-url' package.
+(use-package browse-url
+  :straight (:type built-in)
+  :commands (browse-url browse-url-xdg-open)
+  ;; "URL open"
+  :bind (("C-c u o" . browse-url-xdg-open)))
+
+
 ;; Supports definition of hydras - families of commands with a common prefix.
 (use-package hydra
   :straight t
