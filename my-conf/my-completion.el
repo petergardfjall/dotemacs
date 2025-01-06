@@ -147,6 +147,7 @@
 ;; `completion-at-point-functions' such as `eglot-completion-at-point'.
 (use-package company
   :straight t
+  :disabled
   :diminish
   :init
   (global-company-mode)
@@ -176,7 +177,6 @@
 ;; `completion-at-point-functions' such as `eglot-completion-at-point'.
 (use-package corfu
   :straight t
-  :disabled t
   :init
   (global-corfu-mode)
   :config
@@ -196,22 +196,21 @@
 ;; Extensions for `completion-at-point'.
 (use-package cape
   :straight t
-  :disabled t
   :after corfu
   :init
   ;; Complete word from current buffers.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; Avoid having the `corfu' `completion-at-point' ui base all completion on
-  ;; the first candidate list retrieved from the LSP server. With this "cache
+  ;; Avoid having `corfu' (`completion-at-point' ui) base all completion on the
+  ;; first candidate list retrieved from the LSP server. With this "cache
   ;; buster" Eglot's completion at point gets to re-fetch the candidate list
-  ;; from the LSP server on every keystroke. This makes it behave like
-  ;; `company' does.
+  ;; from the LSP server on every keystroke. This behavior is identical to
+  ;; `company'. For a lengthy discussion see
+  ;; https://github.com/joaotavora/eglot/discussions/1127#discussioncomment-7593169
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 
 (use-package kind-icon
   :straight t
-  :disabled t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
