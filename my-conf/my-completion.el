@@ -7,6 +7,10 @@
 
 (message "loading %s ..." load-file-name)
 
+;;
+;; Minibuffer completion.
+;;
+
 ;; Basic settings for `completing-read' (minibuffer completion) and, to some
 ;; extent, also `complete-at-point' (buffer completion).
 ;;
@@ -17,16 +21,14 @@
   :config
   ;; Determine how to match minibuffer input text against completion candidates.
   (setq completion-styles '(substring basic))
-
   ;; Ignore case on various forms of `completing-read' (minibuffer completion).
   (setq completion-ignore-case t)
   (setq read-file-name-completion-ignore-case t)
   (setq read-buffer-completion-ignore-case t))
 
 
-;; Icomplete is a built-in UI for `completing-read' ("minibuffer
-;; completion"). We configure it to use vertical candidate display in the
-;; minibuffer. Also see:
+;; A built-in UI for `completing-read' ("minibuffer completion"). We configure
+;; it to use vertical candidate display in the minibuffer. Also see:
 ;; https://www.masteringemacs.org/article/understanding-minibuffer-completion
 (use-package icomplete
   :straight (:type built-in)
@@ -79,7 +81,6 @@
 ;; compatible framework (such as icomplete, selectrum and vertico).
 (use-package marginalia
   :straight t
-  ;; The :init configuration is always executed (Not lazy!)
   :init
   (marginalia-mode)
   (defun my-project-buffer-annotator (cand)
@@ -100,6 +101,7 @@
     (define-key m (kbd "M-A") #'marginalia-cycle)))
 
 
+;; Add nerd icons to minibuffer completion.
 (use-package nerd-icons-completion
   :straight t
   :after marginalia
@@ -136,9 +138,13 @@
           (consult-location (styles orderless)))))
 
 
-;; Company is a UI for `completion-at-point' ("in-buffer completion"). It shows
-;; completion candidates in a popup overlay. Completions candidates are provided
-;; by `completion-at-point-functions' such as `eglot-completion-at-point'.
+;;
+;; In-buffer (`completion-at-point') completion.
+;;
+
+;; A UI for `completion-at-point' ("in-buffer completion"). It shows completion
+;; candidates in a popup overlay. Completions candidates are provided by
+;; `completion-at-point-functions' such as `eglot-completion-at-point'.
 (use-package company
   :straight t
   :diminish
@@ -163,6 +169,52 @@
   (setq company-tooltip-align-annotations t)
   ;; Summon the completion popup.
   (define-key company-mode-map (kbd "C-<tab>") #'company-complete))
+
+
+;; A UI for `completion-at-point' ("in-buffer completion"). It shows completion
+;; candidates in a popup overlay. Completions candidates are provided by
+;; `completion-at-point-functions' such as `eglot-completion-at-point'.
+(use-package corfu
+  :straight t
+  :disabled t
+  :init
+  (global-corfu-mode)
+  :config
+  ;; Summon completion at any time with "C-<tab>".
+  (define-key global-map (kbd "C-<tab>") #'completion-at-point)
+  (setq
+   corfu-auto t               ;; Enable (unsummoned) auto-completion.
+   corfu-auto-prefix 3        ;; Min chars before auto-completion is triggered.
+   corfu-auto-delay 0.2       ;; Delay (s) after typing until popup appears.
+   corfu-echo-documentation t ;; Show candidate documentation in echo area.
+   corfu-preview-current nil  ;; Disable current candidate preview.
+   corfu-quit-no-match t      ;; Quit when no candidates remain.
+   corfu-count 15             ;; Maximum number of candidates to display.
+   corfu-min-width 20))       ;; Miniumum popup width (in characters).
+
+
+;; Extensions for `completion-at-point'.
+(use-package cape
+  :straight t
+  :disabled t
+  :after corfu
+  :init
+  ;; Complete word from current buffers.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; Avoid having the `corfu' `completion-at-point' ui base all completion on
+  ;; the first candidate list retrieved from the LSP server. With this "cache
+  ;; buster" Eglot's completion at point gets to re-fetch the candidate list
+  ;; from the LSP server on every keystroke. This makes it behave like
+  ;; `company' does.
+  (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
+
+
+(use-package kind-icon
+  :straight t
+  :disabled t
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 
 
 (provide 'my-completion)
