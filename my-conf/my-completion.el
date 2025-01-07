@@ -107,6 +107,7 @@
   :after marginalia
   :config
   (nerd-icons-completion-mode)
+  (add-to-list 'nerd-icons/devicon-alist '("nf-dev-go" . "") nil)
   (add-hook 'marginalia-mode-hook #'nerd-icons-completion-marginalia-setup))
 
 
