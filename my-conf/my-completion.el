@@ -210,12 +210,5 @@
   (advice-add 'eglot-completion-at-point :around #'cape-wrap-buster))
 
 
-(use-package kind-icon
-  :straight t
-  :after corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-
-
 (provide 'my-completion)
 ;;; my-completion.el ends here.
