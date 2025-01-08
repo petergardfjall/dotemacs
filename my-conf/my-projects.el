@@ -13,6 +13,7 @@
   ;; Ignore .venv directory on calls to `project-find-file'.
   (add-to-list 'vc-directory-exclusion-list ".venv" t)
   (add-to-list 'vc-directory-exclusion-list "tmp" t)
+  (add-to-list 'vc-directory-exclusion-list "node_modules" t)
   (global-set-key (kbd "C-c f f") #'project-find-file))
 
 
