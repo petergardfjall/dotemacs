@@ -175,6 +175,7 @@ Prompts the user for input. It does the equivalent of `C-u M-.'."
 (use-package go-ts-mode
   :straight (:type built-in)
   :commands (go-mode go-ts-mode)
+  :mode (("\\.go$" . go-ts-mode))
   :init
   (add-to-list 'major-mode-remap-alist '(go-mode . go-ts-mode))
   ;; Set up on-save hooks to have eglot format and organize imports.
